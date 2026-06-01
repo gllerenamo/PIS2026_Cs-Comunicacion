@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+# SSP · Frontend Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend del **Sistema de Seguimiento de Practicantes (SSP)** — Grupo 7, Proyecto
+de Ingeniería de Software (UNSA, FIPS). Gestiona las prácticas pre-profesionales
+conforme al reglamento RCU 0501-2020.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Según `SSP_ARQ_ArquitecturaDelSistema_V1.0`:
 
-## React Compiler
+- **React 19 + TypeScript** (Vite)
+- **React Router** para el enrutamiento SPA
+- Autenticación **JWT + RBAC** (roles: `ADMIN`, `PROFESOR`, `ALUMNO`)
+- Despliegue previsto en **Vercel**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+> El backend (FastAPI + PostgreSQL) aún no está disponible. La carpeta
+> `src/services` contiene una **capa mock** que replica los contratos de la API
+> REST (`/api/v1/...`) con latencia simulada y persistencia en `localStorage`.
+> Cuando el backend exista, basta reemplazar el cuerpo de los servicios por
+> llamadas `fetch` reales: los componentes no cambian.
 
-## Expanding the ESLint configuration
+## Historias de usuario implementadas
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| HU   | Descripción                  | Ruta         |
+| ---- | ---------------------------- | ------------ |
+| HU-1 | Iniciar sesión               | `/login`     |
+| HU-2 | Recuperar contraseña         | `/recuperar` |
+| HU-3 | Registrar nuevas cuentas     | `/registro`  |
+| HU-4 | Creación de clases/prácticas | `/aulas`     |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Cuentas de prueba
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Rol      | Correo                  | Contraseña     |
+| -------- | ----------------------- | -------------- |
+| Admin    | `admin@unsa.edu.pe`     | `admin123`     |
+| Profesor | `profesor@unsa.edu.pe`  | `profesor123`  |
+| Alumno   | `alumno@unsa.edu.pe`    | `alumno123`    |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Scripts
+
+```bash
+npm install      # instalar dependencias
+npm run dev      # servidor de desarrollo (http://localhost:5173)
+npm run build    # type-check + build de producción
+npm run preview  # previsualizar el build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Estructura
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+  components/      Componentes de UI reutilizables y layouts
+    ui/            Button, TextField, SelectField, Alert, Modal
+    layout/        AuthLayout (auth), AppLayout (shell autenticado)
+  context/         AuthProvider + contexto de autenticación
+  hooks/           useAuth
+  pages/
+    auth/          LoginPage, ForgotPasswordPage, RegisterPage  (HU-1/2/3)
+    aulas/         AulasPage                                     (HU-4)
+    DashboardPage
+  services/        Capa mock de la API (auth, aulas) + "BD" local
+  types/           Tipos del dominio (contratos de la API)
+  utils/           Validadores de formularios
 ```
