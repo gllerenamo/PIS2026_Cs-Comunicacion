@@ -1,5 +1,4 @@
-# Proyecto de Ingeniería de Software:
-# Sistema de seguimiento de practicantes pre-profesionales Cs. Comunicación
+# Sistema de seguimiento de practicantes pre-profesionales Cs. Comunicación (Proyecto de Ingeniería de Software)
 
 ## Descripción del proyecto
 
