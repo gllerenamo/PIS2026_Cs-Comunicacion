@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AppLayout } from "./components/layout/AppLayout";
 import { LoginPage } from "./pages/auth/LoginPage";
+import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
 import { DashboardPage } from "./pages/DashboardPage";
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
         <Routes>
           {/* Rutas públicas */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/recuperar" element={<ForgotPasswordPage />} />
 
           {/* Rutas protegidas (requieren sesión) */}
           <Route element={<ProtectedRoute />}>
