@@ -1,0 +1,81 @@
+.auth {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* Panel de marca */
+.auth__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px;
+  background: linear-gradient(155deg, var(--color-primary) 0%, #1e3a8a 60%, #0c1e54 100%);
+  color: #fff;
+}
+
+.auth__brand-body {
+  max-width: 420px;
+}
+
+.auth__brand-title {
+  color: #fff;
+  font-size: 30px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.auth__brand-text {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.auth__brand-foot {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.5px;
+}
+
+/* Panel del formulario */
+.auth__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.auth__card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth__header {
+  margin-bottom: 24px;
+}
+
+.auth__title {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.auth__subtitle {
+  color: var(--color-text-muted);
+  font-size: 15px;
+}
+
+.auth__footer {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 880px) {
+  .auth {
+    grid-template-columns: 1fr;
+  }
+  .auth__brand {
+    display: none;
+  }
+}

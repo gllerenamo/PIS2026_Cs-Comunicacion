@@ -1,0 +1,90 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field__icon {
+  position: absolute;
+  left: 12px;
+  display: inline-flex;
+  color: var(--color-text-soft);
+  pointer-events: none;
+}
+
+.field__input {
+  width: 100%;
+  padding: 11px 12px;
+  font-size: 15px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field__input--with-icon {
+  padding-left: 38px;
+}
+
+.field__input::placeholder {
+  color: var(--color-text-soft);
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.field--error .field__input {
+  border-color: var(--color-danger);
+}
+.field--error .field__input:focus {
+  box-shadow: 0 0 0 3px var(--color-danger-soft);
+}
+
+.field__toggle {
+  position: absolute;
+  right: 8px;
+  padding: 4px 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+}
+.field__toggle:hover {
+  background: var(--color-primary-soft);
+}
+
+.field__msg {
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+.field__msg--error {
+  color: var(--color-danger);
+}
+
+/* Select reutiliza el mismo aspecto que el input */
+.field__input[as="select"],
+select.field__input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}

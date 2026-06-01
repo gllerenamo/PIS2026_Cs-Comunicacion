@@ -1,0 +1,24 @@
+.alert {
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  border: 1px solid transparent;
+}
+
+.alert--error {
+  background: var(--color-danger-soft);
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.alert--success {
+  background: var(--color-success-soft);
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.alert--info {
+  background: var(--color-primary-soft);
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
