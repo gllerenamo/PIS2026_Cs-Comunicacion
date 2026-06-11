@@ -38,6 +38,12 @@ async function prepararLocalStorage(page: BrowserPage) {
     localStorage.setItem("ssp_users_mock", JSON.stringify(users));
     localStorage.removeItem("ssp_session_token");
     localStorage.removeItem("ssp_user_role");
+    
+    // Limpieza de claves de la aplicación actual para evitar interferencias
+    localStorage.removeItem("ssp.token");
+    localStorage.removeItem("ssp.session");
+    localStorage.removeItem("ssp.users");
+    localStorage.removeItem("ssp.login_attempts");
   }, MOCK_USERS_SEED);
   
   // Recarga usando las opciones nativas de la documentación de Page
@@ -146,6 +152,63 @@ async function ejecutarSuiteLogin(): Promise<void> {
     assert.ok(textoAlerta && textoAlerta.length > 0, "Error: No se encontró ninguna alerta visible de error en la interfaz.");
     console.log("✅ TC-HU1-02: PASSED");
 
+    // ------------------------------------------------------------------------
+    // TC-HU1-03: Bloqueo de acceso por 15 minutos tras 5 intentos fallidos
+    // ------------------------------------------------------------------------
+    console.log("\nEjecutando TC-HU1-03: Bloqueo de acceso por 15 minutos tras 5 intentos fallidos...");
+    
+    // Usamos una dirección de correo no registrada para asegurarnos de que no interfiera 
+    // con otros estados, o cualquiera registrada que empiece con contador limpio.
+    const testEmail = "blocked_test@unsa.edu.pe";
+    
+    // Realizar 5 intentos de inicio de sesión erróneos
+    for (let i = 1; i <= 5; i++) {
+      console.log(`  Intento fallido ${i}/5 con credenciales inválidas...`);
+      
+      await stagehand.act("Digitar %email% en el campo Correo institucional", {
+        variables: { email: testEmail }
+      });
+      await stagehand.act("Digitar %password% en el campo Contraseña", {
+        variables: { password: "clave_incorrecta" }
+      });
+      await stagehand.act("Hacer clic en el botón Ingresar");
+      
+      await page.waitForLoadState("domcontentloaded");
+      
+      // Debe aparecer la alerta genérica de error de credenciales
+      await page.waitForSelector(".alert--error", { state: "visible", timeout: 5000 });
+      const errorText = await page.evaluate(() => document.querySelector(".alert--error")?.textContent);
+      assert.ok(
+        errorText && errorText.includes("incorrectos"),
+        `Error: En el intento ${i} no se mostró error de credenciales incorrectas. Mensaje: ${errorText}`
+      );
+    }
+    
+    // Intentar por 6ª vez (cuando intenta nuevamente), debería estar bloqueado por 15 minutos
+    console.log("  Intentando ingresar por 6ª vez (debería denegar el acceso inmediatamente)...");
+    
+    await stagehand.act("Digitar %email% en el campo Correo institucional", {
+      variables: { email: testEmail }
+    });
+    await stagehand.act("Digitar %password% en el campo Contraseña", {
+      variables: { password: "clave_incorrecta" }
+    });
+    await stagehand.act("Hacer clic en el botón Ingresar");
+    
+    await page.waitForLoadState("domcontentloaded");
+    
+    // El sistema debe bloquear el acceso y mostrar el mensaje de bloqueo por 15 minutos
+    await page.waitForSelector(".alert--error", { state: "visible", timeout: 5000 });
+    const blockedText = await page.evaluate(() => document.querySelector(".alert--error")?.textContent);
+    
+    console.log(`  Mensaje obtenido en el 6º intento: "${blockedText}"`);
+    assert.ok(
+      blockedText && blockedText.includes("bloqueado") && blockedText.includes("15 minutos"),
+      `Error: En el 6º intento no se mostró el mensaje de bloqueo esperado. Mensaje: ${blockedText}`
+    );
+    
+    console.log("✅ TC-HU1-03: PASSED");
+
     console.log("\n Suite de pruebas para HU-1 finalizada exitosamente.");
     
   } catch (error) {
@@ -153,7 +216,7 @@ async function ejecutarSuiteLogin(): Promise<void> {
     console.error(error);
     
     // Captura de pantalla nativa usando las opciones documentadas de page.screenshot()
-    const screenshotPath = `error_hu1_${Date.now()}.png`;
+    const screenshotPath = `screenshots/error_hu1_${Date.now()}.png`;
     await page.screenshot({ path: screenshotPath, type: "png" });
     console.log(`Captura del estado de la pantalla guardada en: ${screenshotPath}`);
     

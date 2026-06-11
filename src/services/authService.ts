@@ -20,12 +20,56 @@ function fakeJwt(user: User): string {
 }
 
 export const authService = {
-  /** POST /api/v1/auth/login → 200 (token + user) | 401 */
+  /** POST /api/v1/auth/login → 200 (token + user) | 401 | 403 */
   async login(email: string, password: string): Promise<LoginResponse> {
+    const emailLower = email.toLowerCase();
+    const ATTEMPTS_KEY = "ssp.login_attempts";
+
+    // Recuperar registro de intentos fallidos
+    const attemptsData = localStorage.getItem(ATTEMPTS_KEY);
+    let attempts: Record<string, { count: number; lockedUntil?: number }> = {};
+    if (attemptsData) {
+      try {
+        attempts = JSON.parse(attemptsData);
+      } catch (e) {
+        attempts = {};
+      }
+    }
+
+    const record = attempts[emailLower] || { count: 0 };
+
+    // Verificar si el acceso está bloqueado
+    if (record.lockedUntil && Date.now() < record.lockedUntil) {
+      const remainingMs = record.lockedUntil - Date.now();
+      const remainingMinutes = Math.ceil(remainingMs / (60 * 1000));
+      return rejectAfter(
+        403,
+        `Acceso bloqueado. Intente nuevamente en ${remainingMinutes} minutos.`
+      );
+    }
+
     const user = db.findUserByEmail(email);
     if (!user || user.password !== password) {
+      // Incrementar contador de intentos fallidos
+      record.count = (record.count || 0) + 1;
+
+      // Si supera 5 intentos fallidos, se bloquea el acceso por 15 minutos
+      // El 5º intento fallido establece el bloqueo, y a partir del siguiente intento (cuando intenta nuevamente)
+      // se le niega el acceso.
+      if (record.count >= 5) {
+        record.lockedUntil = Date.now() + 15 * 60 * 1000;
+      }
+
+      attempts[emailLower] = record;
+      localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(attempts));
+
       return rejectAfter(401, "Correo o contraseña incorrectos.");
     }
+
+    // Login exitoso: limpiar historial de intentos para este correo
+    delete attempts[emailLower];
+    localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(attempts));
+
     const { password: _omit, ...publicUser } = user;
     void _omit;
     const token = fakeJwt(publicUser);
