@@ -1,80 +1,134 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import type { Role } from "../../types";
-import { Logo } from "../Logo";
 import { useAuth } from "../../hooks/useAuth";
 import "./AppLayout.css";
 
 interface NavItem {
   to: string;
   label: string;
-  roles?: Role[];
+  /** Si está deshabilitado, se muestra pero aún no es navegable (pantalla pendiente). */
+  enabled?: boolean;
 }
 
-const NAV: NavItem[] = [
-  { to: "/dashboard", label: "Inicio" },
-  { to: "/aulas", label: "Clases y prácticas", roles: ["ADMIN", "PROFESOR"] },
-];
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
 
-const ROLE_LABEL: Record<Role, string> = {
-  ADMIN: "Administrador",
-  PROFESOR: "Profesor",
-  ALUMNO: "Alumno",
+/** Navegación por rol. Las pantallas aún no implementadas van como `enabled: false`. */
+const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
+  ALUMNO: [
+    {
+      title: "Principal",
+      items: [
+        { to: "/dashboard", label: "Inicio", enabled: true },
+        { to: "/mis-aulas", label: "Mis aulas", enabled: true },
+      ],
+    },
+    {
+      title: "Mi práctica",
+      items: [
+        { to: "/bitacora", label: "Mi bitácora" },
+        { to: "/calificaciones", label: "Calificaciones" },
+      ],
+    },
+    {
+      title: "Comunicación",
+      items: [
+        { to: "/mensajeria", label: "Mensajería" },
+        { to: "/foros", label: "Foros" },
+      ],
+    },
+    {
+      title: "Cuenta",
+      items: [{ to: "/perfil", label: "Mi perfil" }],
+    },
+  ],
+  PROFESOR: [
+    {
+      title: "Principal",
+      items: [
+        { to: "/dashboard", label: "Inicio", enabled: true },
+        { to: "/aulas", label: "Clases y prácticas", enabled: true },
+      ],
+    },
+  ],
+  ADMIN: [
+    {
+      title: "Principal",
+      items: [
+        { to: "/dashboard", label: "Inicio", enabled: true },
+        { to: "/aulas", label: "Clases y prácticas", enabled: true },
+      ],
+    },
+  ],
 };
 
-/** Shell de la aplicación autenticada: barra lateral + cabecera + contenido. */
+/** Shell de la aplicación: cabecera de marca (guinda) + barra lateral agrupada. */
 export function AppLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   if (!user) return null;
 
-  const visibleNav = NAV.filter(
-    (item) => !item.roles || item.roles.includes(user.role),
-  );
+  const groups = NAV_BY_ROLE[user.role];
+  const initials =
+    `${user.nombres[0] ?? ""}${user.apellidos[0] ?? ""}`.toUpperCase();
 
   function handleLogout() {
     logout();
     navigate("/login", { replace: true });
   }
 
-  const initials = `${user.nombres[0] ?? ""}${user.apellidos[0] ?? ""}`.toUpperCase();
-
   return (
-    <div className="app">
-      <aside className="app__sidebar">
-        <div className="app__logo">
-          <Logo size="sm" />
+    <div className="shell">
+      <header className="shell__topbar">
+        <div className="shell__brand">
+          <span className="shell__brand-name">PrácticasCC</span>
+          <span className="shell__brand-sub">Ciencias de la Comunicación</span>
         </div>
-        <nav className="app__nav">
-          {visibleNav.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `app__nav-link ${isActive ? "is-active" : ""}`
-              }
-            >
-              {item.label}
-            </NavLink>
+        <div className="shell__user">
+          <span className="shell__user-name">
+            {user.nombres} {user.apellidos}
+          </span>
+          <span className="shell__avatar">{initials}</span>
+          <button className="shell__logout" onClick={handleLogout}>
+            Salir
+          </button>
+        </div>
+      </header>
+
+      <div className="shell__body">
+        <aside className="shell__sidebar">
+          {groups.map((group) => (
+            <div key={group.title} className="shell__nav-group">
+              <p className="shell__nav-title">{group.title}</p>
+              {group.items.map((item) =>
+                item.enabled ? (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `shell__nav-link ${isActive ? "is-active" : ""}`
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                ) : (
+                  <span
+                    key={item.to}
+                    className="shell__nav-link is-disabled"
+                    title="Próximamente"
+                  >
+                    {item.label}
+                  </span>
+                ),
+              )}
+            </div>
           ))}
-        </nav>
-      </aside>
+        </aside>
 
-      <div className="app__main">
-        <header className="app__topbar">
-          <span className="app__role-tag">{ROLE_LABEL[user.role]}</span>
-          <div className="app__user">
-            <span className="app__avatar">{initials}</span>
-            <span className="app__user-name">
-              {user.nombres} {user.apellidos}
-            </span>
-            <button className="app__logout" onClick={handleLogout}>
-              Cerrar sesión
-            </button>
-          </div>
-        </header>
-
-        <main className="app__content">
+        <main className="shell__content">
           <Outlet />
         </main>
       </div>
