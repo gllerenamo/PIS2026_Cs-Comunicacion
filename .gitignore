@@ -28,3 +28,9 @@ dist-ssr
 # Documentos de referencia (no forman parte del código fuente)
 *.pdf.md
 Mockups - Interfaz Alumno.md
+
+# Backend (Python) — entorno y secretos locales
+ssp-backend/**/venv/
+ssp-backend/**/.env
+ssp-backend/**/*.db
+ssp-backend/**/__pycache__/

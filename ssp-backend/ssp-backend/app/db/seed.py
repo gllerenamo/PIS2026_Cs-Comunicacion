@@ -6,7 +6,16 @@ Script de semilla — inserta los usuarios iniciales del mockDb.
 
 from app.core.security import hash_password
 from app.db.session import SessionLocal, engine
-from app.models.models import Aula, AulaEstadoEnum, Base, RoleEnum, User
+from app.models.models import (
+    ActividadEstadoEnum,
+    ActividadReciente,
+    Aula,
+    AulaEstadoEnum,
+    Base,
+    Inscripcion,
+    RoleEnum,
+    User,
+)
 from datetime import datetime, timezone
 
 
@@ -72,8 +81,57 @@ def seed():
             created_at=datetime(2025, 8, 15, tzinfo=timezone.utc),
         )
         db.add_all([aula1, aula2])
+        db.flush()  # necesario para FK en inscripciones
+
+        # ── Inscripciones del alumno (HU-05) ─────────────────────────────────────
+        db.add_all(
+            [
+                Inscripcion(
+                    alumno_id="u-alumno",
+                    aula_id="a-1",
+                    progreso=65,
+                    semana_actual=9,
+                    semanas_totales=16,
+                ),
+                Inscripcion(
+                    alumno_id="u-alumno",
+                    aula_id="a-2",
+                    progreso=100,
+                    semana_actual=16,
+                    semanas_totales=16,
+                ),
+            ]
+        )
+
+        # ── Actividad reciente del alumno (HU-05) ────────────────────────────────
+        db.add_all(
+            [
+                ActividadReciente(
+                    alumno_id="u-alumno",
+                    titulo="Informe semanal N.° 9 publicado",
+                    contexto="Prácticas Pre-Profesionales I — hace 2 horas",
+                    tiempo="hace 2 horas",
+                    estado=ActividadEstadoEnum.PENDIENTE,
+                ),
+                ActividadReciente(
+                    alumno_id="u-alumno",
+                    titulo="Nuevo mensaje del profesor",
+                    contexto="Jose Luis Cuenca — ayer",
+                    tiempo="ayer",
+                    estado=ActividadEstadoEnum.SIN_LEER,
+                ),
+                ActividadReciente(
+                    alumno_id="u-alumno",
+                    titulo="Tarea N.° 8 calificada: 17/20",
+                    contexto="Prácticas Pre-Profesionales I — hace 3 días",
+                    tiempo="hace 3 días",
+                    estado=ActividadEstadoEnum.CALIFICADA,
+                ),
+            ]
+        )
+
         db.commit()
-        print("✅ Semilla insertada correctamente.")
+        print("[OK] Semilla insertada correctamente.")
     finally:
         db.close()
 
