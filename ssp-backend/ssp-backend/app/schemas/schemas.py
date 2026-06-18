@@ -10,6 +10,7 @@ from pydantic import BaseModel, EmailStr, field_validator
 
 Role = Literal["ADMIN", "PROFESOR", "ALUMNO"]
 AulaEstado = Literal["ACTIVA", "CONCLUIDA"]
+ActividadEstado = Literal["PENDIENTE", "SIN_LEER", "CALIFICADA"]
 
 
 # ── Auth ───────────────────────────────────────────────────────────────────────
@@ -95,3 +96,29 @@ class AulaOut(BaseModel):
     createdAt: str  # ISO 8601 string, como espera el frontend
 
     model_config = {"from_attributes": True}
+
+
+# ── Alumno (HU-05) ───────────────────────────────────────────────────────────
+
+
+class AulaAlumnoOut(BaseModel):
+    """Idéntico a la interfaz AulaAlumno del frontend."""
+
+    id: str
+    nombre: str
+    profesorNombre: str
+    ciclo: str
+    estado: AulaEstado
+    progreso: int
+    semanaActual: int
+    semanasTotales: int
+
+
+class ActividadRecienteOut(BaseModel):
+    """Idéntico a la interfaz ActividadReciente del frontend."""
+
+    id: str
+    titulo: str
+    contexto: str
+    tiempo: str
+    estado: ActividadEstado

@@ -31,6 +31,12 @@ class AulaEstadoEnum(str, enum.Enum):
     CONCLUIDA = "CONCLUIDA"
 
 
+class ActividadEstadoEnum(str, enum.Enum):
+    PENDIENTE = "PENDIENTE"
+    SIN_LEER = "SIN_LEER"
+    CALIFICADA = "CALIFICADA"
+
+
 # ── Tablas ──────────────────────────────────────────────────────────────────────
 
 
@@ -66,3 +72,36 @@ class Aula(Base):
     )
 
     profesor = relationship("User", back_populates="aulas")
+
+
+class Inscripcion(Base):
+    """Matrícula de un alumno en un aula, con su avance (HU-05)."""
+
+    __tablename__ = "inscripciones"
+
+    id = Column(String, primary_key=True, default=lambda: f"i-{uuid.uuid4().hex[:10]}")
+    alumno_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    aula_id = Column(String, ForeignKey("aulas.id"), nullable=False, index=True)
+    progreso = Column(Integer, nullable=False, default=0)  # 0–100
+    semana_actual = Column(Integer, nullable=False, default=0)
+    semanas_totales = Column(Integer, nullable=False, default=16)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    alumno = relationship("User")
+    aula = relationship("Aula")
+
+
+class ActividadReciente(Base):
+    """Ítem del feed de actividad reciente de un alumno (HU-05)."""
+
+    __tablename__ = "actividad_reciente"
+
+    id = Column(String, primary_key=True, default=lambda: f"act-{uuid.uuid4().hex[:8]}")
+    alumno_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    titulo = Column(String(200), nullable=False)
+    contexto = Column(String(255), nullable=False, default="")
+    tiempo = Column(String(60), nullable=False, default="")
+    estado = Column(Enum(ActividadEstadoEnum), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    alumno = relationship("User")
