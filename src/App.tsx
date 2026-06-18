@@ -7,6 +7,7 @@ import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AulasPage } from "./pages/aulas/AulasPage";
+import { MisAulasPage } from "./pages/alumno/MisAulasPage";
 
 export default function App() {
   return (
@@ -29,6 +30,13 @@ export default function App() {
           <Route element={<ProtectedRoute roles={["ADMIN", "PROFESOR"]} />}>
             <Route element={<AppLayout />}>
               <Route path="/aulas" element={<AulasPage />} />
+            </Route>
+          </Route>
+
+          {/* Vista del alumno: clases programadas (HU-05) */}
+          <Route element={<ProtectedRoute roles={["ALUMNO"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/mis-aulas" element={<MisAulasPage />} />
             </Route>
           </Route>
 

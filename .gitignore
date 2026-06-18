@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .claude
+
+# Documentos de referencia (no forman parte del código fuente)
+*.pdf.md
+Mockups - Interfaz Alumno.md

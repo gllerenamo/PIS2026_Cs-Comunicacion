@@ -61,6 +61,32 @@ export interface CreateAulaPayload {
   periodo: string;
 }
 
+/** Vista de un aula desde la perspectiva del alumno inscrito (HU-05). */
+export interface AulaAlumno {
+  id: string;
+  nombre: string;
+  profesorNombre: string;
+  /** Ciclo académico, ej. "2024-II". */
+  ciclo: string;
+  estado: AulaEstado;
+  /** Avance de la práctica, 0–100. */
+  progreso: number;
+  semanaActual: number;
+  semanasTotales: number;
+}
+
+/** Estado de un ítem de actividad reciente. */
+export type ActividadEstado = "PENDIENTE" | "SIN_LEER" | "CALIFICADA";
+
+/** Ítem del feed de actividad reciente del alumno (HU-05). */
+export interface ActividadReciente {
+  id: string;
+  titulo: string;
+  contexto: string;
+  tiempo: string;
+  estado: ActividadEstado;
+}
+
 /** Error normalizado que emite la capa de servicios. */
 export interface ApiError {
   status: number;
