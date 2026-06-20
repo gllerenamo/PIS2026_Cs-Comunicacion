@@ -87,6 +87,19 @@ export interface ActividadReciente {
   estado: ActividadEstado;
 }
 
+/** Archivo subido a un aula (HU-07/08). */
+export interface Archivo {
+  id: string;
+  aulaId: string;
+  subidoPorId: string;
+  subidoPorNombre: string;
+  nombreOriginal: string;
+  tipoMime: string;
+  /** Tamaño en bytes. */
+  tamanio: number;
+  createdAt: string;
+}
+
 /** Error normalizado que emite la capa de servicios. */
 export interface ApiError {
   status: number;
