@@ -91,6 +91,28 @@ class Inscripcion(Base):
     aula = relationship("Aula")
 
 
+class Archivo(Base):
+    """Archivo subido a un aula (HU-07/08)."""
+
+    __tablename__ = "archivos"
+
+    id = Column(String, primary_key=True, default=lambda: f"arc-{uuid.uuid4().hex[:8]}")
+    aula_id = Column(String, ForeignKey("aulas.id"), nullable=False, index=True)
+    subido_por_id = Column(String, ForeignKey("users.id"), nullable=False)
+    nombre_original = Column(String(255), nullable=False)
+    nombre_guardado = Column(String(255), unique=True, nullable=False)
+    tipo_mime = Column(String(100), nullable=False)
+    tamanio = Column(Integer, nullable=False)  # bytes
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    aula = relationship("Aula")
+    subido_por = relationship("User", foreign_keys=[subido_por_id])
+
+
 class ActividadReciente(Base):
     """Ítem del feed de actividad reciente de un alumno (HU-05)."""
 

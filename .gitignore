@@ -34,3 +34,7 @@ ssp-backend/**/venv/
 ssp-backend/**/.env
 ssp-backend/**/*.db
 ssp-backend/**/__pycache__/
+
+# Archivos subidos al backend (solo se versionea el placeholder)
+ssp-backend/**/uploads/*
+!ssp-backend/**/uploads/.gitkeep

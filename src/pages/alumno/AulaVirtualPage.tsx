@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { StepTabs } from "../../components/alumno/StepTabs";
+import { MaterialesPanel } from "../../components/alumno/MaterialesPanel";
 import { alumnoService } from "../../services/alumnoService";
 import { useAuth } from "../../hooks/useAuth";
 import type { AulaAlumno } from "../../types";
@@ -84,7 +85,11 @@ export function AulaVirtualPage() {
       </nav>
 
       <section className="aula-v__panel" role="tabpanel">
-        <p className="aula-v__placeholder">{TAB_PLACEHOLDER[activeTab]}</p>
+        {activeTab === "Materiales" ? (
+          <MaterialesPanel aulaId={aula.id} />
+        ) : (
+          <p className="aula-v__placeholder">{TAB_PLACEHOLDER[activeTab]}</p>
+        )}
       </section>
     </div>
   );

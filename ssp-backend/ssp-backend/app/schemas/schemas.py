@@ -122,3 +122,19 @@ class ActividadRecienteOut(BaseModel):
     contexto: str
     tiempo: str
     estado: ActividadEstado
+
+
+# ── Archivos (HU-07/08) ──────────────────────────────────────────────────────
+
+
+class ArchivoOut(BaseModel):
+    """Idéntico a la interfaz Archivo del frontend."""
+
+    id: str
+    aulaId: str
+    subidoPorId: str
+    subidoPorNombre: str
+    nombreOriginal: str
+    tipoMime: str
+    tamanio: int
+    createdAt: str
