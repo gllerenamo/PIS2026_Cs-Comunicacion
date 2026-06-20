@@ -29,12 +29,11 @@ export function AuthLayout({
             Gestión integral de prácticas pre-profesionales
           </h2>
           <p className="auth__brand-text">
-            Plataforma de la Escuela Profesional de Ingeniería de Sistemas para
-            el registro de asistencia, informes y seguimiento de practicantes
-            conforme al reglamento RCU 0501-2020.
+            Plataforma de la Escuela Profesional de Ciencias de la Comunicación
+            para el registro de asistencia, informes y seguimiento de
+            practicantes.
           </p>
         </div>
-        <p className="auth__brand-foot">UNSA · FIPS · 2026</p>
       </aside>
 
       <main className="auth__panel">

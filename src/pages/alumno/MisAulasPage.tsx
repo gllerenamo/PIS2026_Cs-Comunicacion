@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { StepTabs } from "../../components/alumno/StepTabs";
 import { alumnoService } from "../../services/alumnoService";
 import { useAuth } from "../../hooks/useAuth";
@@ -14,6 +15,7 @@ const ACTIVIDAD_LABEL: Record<ActividadEstado, string> = {
 /** HU-05 · Acceso y vista de clases programadas (Mis aulas del alumno). */
 export function MisAulasPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [aulas, setAulas] = useState<AulaAlumno[]>([]);
   const [actividad, setActividad] = useState<ActividadReciente[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +82,10 @@ export function MisAulasPage() {
                     {aula.semanasTotales}
                   </p>
                   <span className="badge badge--activa">Activa</span>
-                  <button className="aula-al-card__cta" disabled title="Disponible en HU-06">
+                  <button
+                    className="aula-al-card__cta"
+                    onClick={() => navigate(`/mis-aulas/${aula.id}`)}
+                  >
                     Ingresar al aula
                   </button>
                 </>
