@@ -1,5 +1,5 @@
 """
-Experiencia del alumno (HU-05): vista de clases programadas y actividad reciente.
+Experiencia del alumno (HU-05/06): mis aulas, actividad reciente y detalle de aula.
 Rutas: /api/v1/alumno/*
 """
 
@@ -92,3 +92,45 @@ def list_actividad(
         )
         for it in items
     ]
+
+
+# ── GET /api/v1/alumno/aulas/{aula_id} ───────────────────────────────────────
+
+
+@router.get("/aulas/{aula_id}", response_model=AulaAlumnoOut)
+def get_aula_detalle(
+    aula_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Devuelve el detalle de una aula específica para el alumno inscrito.
+    403 si no es alumno; 404 si no está inscrito o el aula no existe.
+    """
+    _solo_alumno(current_user)
+
+    ins = (
+        db.query(Inscripcion)
+        .filter(
+            Inscripcion.alumno_id == current_user.id,
+            Inscripcion.aula_id == aula_id,
+        )
+        .first()
+    )
+    if ins is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Aula no encontrada o no estás inscrito.",
+        )
+
+    aula = ins.aula
+    return AulaAlumnoOut(
+        id=aula.id,
+        nombre=aula.nombre,
+        profesorNombre=f"{aula.profesor.nombres} {aula.profesor.apellidos}",
+        ciclo=aula.periodo,
+        estado=aula.estado.value,
+        progreso=ins.progreso,
+        semanaActual=ins.semana_actual,
+        semanasTotales=ins.semanas_totales,
+    )

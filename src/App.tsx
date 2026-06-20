@@ -8,6 +8,7 @@ import { RegisterPage } from "./pages/auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AulasPage } from "./pages/aulas/AulasPage";
 import { MisAulasPage } from "./pages/alumno/MisAulasPage";
+import { AulaVirtualPage } from "./pages/alumno/AulaVirtualPage";
 
 export default function App() {
   return (
@@ -33,10 +34,11 @@ export default function App() {
             </Route>
           </Route>
 
-          {/* Vista del alumno: clases programadas (HU-05) */}
+          {/* Vista del alumno: clases programadas (HU-05) y aula virtual (HU-06) */}
           <Route element={<ProtectedRoute roles={["ALUMNO"]} />}>
             <Route element={<AppLayout />}>
               <Route path="/mis-aulas" element={<MisAulasPage />} />
+              <Route path="/mis-aulas/:id" element={<AulaVirtualPage />} />
             </Route>
           </Route>
 
