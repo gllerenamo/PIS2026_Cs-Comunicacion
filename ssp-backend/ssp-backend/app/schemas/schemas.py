@@ -124,6 +124,56 @@ class ActividadRecienteOut(BaseModel):
     estado: ActividadEstado
 
 
+# ── Tareas y entregas (HU-09/10) ────────────────────────────────────────────
+
+
+class EntregaOut(BaseModel):
+    id: str
+    tareaId: str
+    alumnoId: str
+    descripcion: str
+    comentario: str
+    archivoId: Optional[str]
+    estado: str
+    nota: Optional[int]
+    retroalimentacion: Optional[str]
+    createdAt: str
+
+
+class TareaAlumnoOut(BaseModel):
+    """Tarea vista desde el alumno, incluyendo su entrega si ya existe."""
+
+    id: str
+    aulaId: str
+    titulo: str
+    descripcion: str
+    fechaLimite: Optional[str]
+    createdAt: str
+    entrega: Optional[EntregaOut]
+
+
+class SubmitEntregaRequest(BaseModel):
+    descripcion: str = ""
+    comentario: str = ""
+    archivoId: Optional[str] = None
+
+
+class DetalleCalificacionOut(BaseModel):
+    tareaId: str
+    tareaTitulo: str
+    nota: Optional[int]
+    retroalimentacion: Optional[str]
+    estado: str
+    entregadaEn: Optional[str]
+
+
+class CalificacionesOut(BaseModel):
+    promedio: Optional[float]
+    tareasTotal: int
+    tareasEntregadas: int
+    detalle: list[DetalleCalificacionOut]
+
+
 # ── Archivos (HU-07/08) ──────────────────────────────────────────────────────
 
 

@@ -12,8 +12,11 @@ from app.models.models import (
     Aula,
     AulaEstadoEnum,
     Base,
+    Entrega,
+    EntregaEstadoEnum,
     Inscripcion,
     RoleEnum,
+    Tarea,
     User,
 )
 from datetime import datetime, timezone
@@ -128,6 +131,46 @@ def seed():
                     estado=ActividadEstadoEnum.CALIFICADA,
                 ),
             ]
+        )
+
+        # ── Tareas del aula activa (HU-09) ───────────────────────────────────────
+        tarea1 = Tarea(
+            id="t-1",
+            aula_id="a-1",
+            titulo="Informe Semanal N.° 8",
+            descripcion="Redacta el informe correspondiente a la semana 8 de prácticas, incluyendo las actividades realizadas, horas trabajadas y evidencias.",
+            fecha_limite=datetime(2026, 5, 10, tzinfo=timezone.utc),
+        )
+        tarea2 = Tarea(
+            id="t-2",
+            aula_id="a-1",
+            titulo="Informe Semanal N.° 9",
+            descripcion="Redacta el informe de la semana 9 con evidencias fotográficas o capturas de pantalla adjuntas como archivo.",
+            fecha_limite=datetime(2026, 5, 17, tzinfo=timezone.utc),
+        )
+        tarea3 = Tarea(
+            id="t-3",
+            aula_id="a-1",
+            titulo="Plan de Trabajo Final",
+            descripcion="Presenta tu plan de trabajo para las semanas restantes de práctica, indicando objetivos, actividades y cronograma.",
+            fecha_limite=datetime(2026, 6, 1, tzinfo=timezone.utc),
+        )
+        db.add_all([tarea1, tarea2, tarea3])
+        db.flush()
+
+        # Entrega calificada (tarea1 ya fue revisada por el profesor)
+        db.add(
+            Entrega(
+                id="ent-1",
+                tarea_id="t-1",
+                alumno_id="u-alumno",
+                descripcion="Adjunto mi informe de la semana 8 con todas las actividades realizadas en el área de producción audiovisual.",
+                comentario="Esta semana trabajé en el montaje del spot publicitario para el cliente principal.",
+                estado=EntregaEstadoEnum.CALIFICADA,
+                nota=17,
+                retroalimentacion="Excelente presentación. Buena estructura y detalle en las actividades. Continúa así.",
+                created_at=datetime(2026, 5, 8, tzinfo=timezone.utc),
+            )
         )
 
         db.commit()
