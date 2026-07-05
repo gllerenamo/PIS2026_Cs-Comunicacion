@@ -9,6 +9,8 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { AulasPage } from "./pages/aulas/AulasPage";
 import { MisAulasPage } from "./pages/alumno/MisAulasPage";
 import { AulaVirtualPage } from "./pages/alumno/AulaVirtualPage";
+import { ProgresoPage } from "./pages/profesor/ProgresoPage";
+import { UsuariosPage } from "./pages/admin/UsuariosPage";
 
 export default function App() {
   return (
@@ -39,6 +41,20 @@ export default function App() {
             <Route element={<AppLayout />}>
               <Route path="/mis-aulas" element={<MisAulasPage />} />
               <Route path="/mis-aulas/:id" element={<AulaVirtualPage />} />
+            </Route>
+          </Route>
+
+          {/* Progreso practicantes (HU-11): Profesor y Admin */}
+          <Route element={<ProtectedRoute roles={["ADMIN", "PROFESOR"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/progreso" element={<ProgresoPage />} />
+            </Route>
+          </Route>
+
+          {/* Gestión de usuarios (HU-12): solo Admin */}
+          <Route element={<ProtectedRoute roles={["ADMIN"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/usuarios" element={<UsuariosPage />} />
             </Route>
           </Route>
 

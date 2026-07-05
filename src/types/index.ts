@@ -87,6 +87,31 @@ export interface ActividadReciente {
   estado: ActividadEstado;
 }
 
+/** Progreso de un practicante en un aula (HU-11). */
+export interface PracticanteProgreso {
+  alumnoId: string;
+  alumnoNombre: string;
+  alumnoEmail: string;
+  aulaId: string;
+  aulaNombre: string;
+  progreso: number;
+  semanaActual: number;
+  semanasTotales: number;
+  estado: AulaEstado;
+  tareasEntregadas: number;
+  tareasTotal: number;
+}
+
+/** Usuario visto desde el panel de administración (HU-12). */
+export interface UsuarioAdmin {
+  id: string;
+  nombres: string;
+  apellidos: string;
+  email: string;
+  role: Role;
+  createdAt: string;
+}
+
 /** Estado de una entrega de tarea. */
 export type EntregaEstado = "ENTREGADA" | "CALIFICADA";
 

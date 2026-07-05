@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import auth, aulas, alumno, archivos, tareas
+from app.routers import auth, aulas, alumno, archivos, tareas, profesor, admin
 
 app = FastAPI(
     title="SSP — Sistema de Seguimiento de Practicantes",
@@ -27,6 +27,8 @@ app.include_router(aulas.router, prefix=API_PREFIX)
 app.include_router(alumno.router, prefix=API_PREFIX)
 app.include_router(archivos.router, prefix=API_PREFIX)
 app.include_router(tareas.router, prefix=API_PREFIX)
+app.include_router(profesor.router, prefix=API_PREFIX)
+app.include_router(admin.router, prefix=API_PREFIX)
 
 
 @app.get("/", tags=["health"])

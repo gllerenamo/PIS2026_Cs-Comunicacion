@@ -50,6 +50,7 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
       items: [
         { to: "/dashboard", label: "Inicio", enabled: true },
         { to: "/aulas", label: "Clases y prácticas", enabled: true },
+        { to: "/progreso", label: "Progreso practicantes", enabled: true },
       ],
     },
   ],
@@ -59,6 +60,8 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
       items: [
         { to: "/dashboard", label: "Inicio", enabled: true },
         { to: "/aulas", label: "Clases y prácticas", enabled: true },
+        { to: "/progreso", label: "Progreso practicantes", enabled: true },
+        { to: "/usuarios", label: "Gestión de usuarios", enabled: true },
       ],
     },
   ],

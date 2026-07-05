@@ -1,0 +1,152 @@
+.usuarios-page {
+  padding: 24px;
+  max-width: 860px;
+}
+
+.usuarios-page__breadcrumb {
+  font-size: 12.5px;
+  color: var(--color-text-soft);
+  margin-bottom: 12px;
+}
+
+.usuarios-page__head {
+  margin-bottom: 20px;
+}
+
+.usuarios-page__title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.usuarios-page__subtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.usuarios-page__muted {
+  color: var(--color-text-muted);
+}
+
+.usuarios-page__error {
+  color: var(--color-danger);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+/* Filtros */
+.usuarios-filtros {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.usuarios-filtro-btn {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.usuarios-filtro-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.usuarios-filtro-btn.is-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Tabla */
+.usuarios-table-wrap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.usuarios-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.usuarios-table th {
+  text-align: left;
+  padding: 11px 16px;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.usuarios-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.usuarios-table tr:last-child td {
+  border-bottom: none;
+}
+
+.usuarios-table__nombre {
+  font-weight: 600;
+}
+
+.usuarios-table__email {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.usuarios-table__empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 24px !important;
+}
+
+/* Select de rol */
+.usuarios-rol-select {
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.usuarios-rol-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Feedback inline */
+.usuarios-feedback {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.usuarios-feedback--ok {
+  color: var(--color-success);
+}
+
+.usuarios-feedback--error {
+  color: var(--color-danger);
+}
+
+.usuarios-feedback--saving {
+  color: var(--color-text-soft);
+}
