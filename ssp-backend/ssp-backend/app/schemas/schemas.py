@@ -124,6 +124,39 @@ class ActividadRecienteOut(BaseModel):
     estado: ActividadEstado
 
 
+# ── Profesor (HU-11) ─────────────────────────────────────────────────────────
+
+
+class PracticanteProgresoOut(BaseModel):
+    alumnoId: str
+    alumnoNombre: str
+    alumnoEmail: str
+    aulaId: str
+    aulaNombre: str
+    progreso: int
+    semanaActual: int
+    semanasTotales: int
+    estado: AulaEstado
+    tareasEntregadas: int
+    tareasTotal: int
+
+
+# ── Admin (HU-12) ─────────────────────────────────────────────────────────────
+
+
+class UsuarioAdminOut(BaseModel):
+    id: str
+    nombres: str
+    apellidos: str
+    email: str
+    role: Role
+    createdAt: str
+
+
+class UpdateRolRequest(BaseModel):
+    role: Role
+
+
 # ── Tareas y entregas (HU-09/10) ────────────────────────────────────────────
 
 

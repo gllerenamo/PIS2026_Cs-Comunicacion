@@ -1,0 +1,138 @@
+.progreso-page {
+  padding: 24px;
+  max-width: 960px;
+}
+
+.progreso-page__breadcrumb {
+  font-size: 12.5px;
+  color: var(--color-text-soft);
+  margin-bottom: 12px;
+}
+
+.progreso-page__head {
+  margin-bottom: 24px;
+}
+
+.progreso-page__title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.progreso-page__subtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.progreso-page__muted {
+  color: var(--color-text-muted);
+  padding: 24px;
+}
+
+.progreso-page__error {
+  color: var(--color-danger);
+  padding: 24px;
+}
+
+/* Grupo por aula */
+.progreso-grupo {
+  margin-bottom: 28px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.progreso-grupo__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-primary-soft);
+}
+
+.progreso-grupo__titulo {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  flex: 1;
+}
+
+/* Tabla */
+.progreso-table-wrap {
+  overflow-x: auto;
+}
+
+.progreso-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.progreso-table th {
+  text-align: left;
+  padding: 10px 16px;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.progreso-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.progreso-table tr:last-child td {
+  border-bottom: none;
+}
+
+.progreso-table__nombre {
+  font-weight: 600;
+}
+
+.progreso-table__email {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.progreso-table__progreso {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 160px;
+}
+
+.progreso-bar-wrap {
+  flex: 1;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.progreso-bar {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 999px;
+}
+
+.progreso-pct {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.progreso-table__semana,
+.progreso-table__tareas {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  text-align: center;
+}
