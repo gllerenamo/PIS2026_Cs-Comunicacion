@@ -37,6 +37,11 @@ class ActividadEstadoEnum(str, enum.Enum):
     CALIFICADA = "CALIFICADA"
 
 
+class EntregaEstadoEnum(str, enum.Enum):
+    ENTREGADA = "ENTREGADA"
+    CALIFICADA = "CALIFICADA"
+
+
 # ── Tablas ──────────────────────────────────────────────────────────────────────
 
 
@@ -111,6 +116,55 @@ class Archivo(Base):
 
     aula = relationship("Aula")
     subido_por = relationship("User", foreign_keys=[subido_por_id])
+
+
+class Tarea(Base):
+    """Tarea asignada a un aula por el profesor (HU-09)."""
+
+    __tablename__ = "tareas"
+
+    id = Column(String, primary_key=True, default=lambda: f"t-{uuid.uuid4().hex[:8]}")
+    aula_id = Column(String, ForeignKey("aulas.id"), nullable=False, index=True)
+    titulo = Column(String(200), nullable=False)
+    descripcion = Column(Text, nullable=False, default="")
+    fecha_limite = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    aula = relationship("Aula")
+    entregas = relationship("Entrega", back_populates="tarea")
+
+
+class Entrega(Base):
+    """Entrega de un alumno a una tarea (HU-09)."""
+
+    __tablename__ = "entregas"
+
+    id = Column(String, primary_key=True, default=lambda: f"ent-{uuid.uuid4().hex[:8]}")
+    tarea_id = Column(String, ForeignKey("tareas.id"), nullable=False, index=True)
+    alumno_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    descripcion = Column(Text, nullable=False, default="")
+    comentario = Column(Text, nullable=False, default="")
+    archivo_id = Column(String, ForeignKey("archivos.id"), nullable=True)
+    estado = Column(
+        Enum(EntregaEstadoEnum),
+        nullable=False,
+        default=EntregaEstadoEnum.ENTREGADA,
+    )
+    nota = Column(Integer, nullable=True)        # 0–20
+    retroalimentacion = Column(Text, nullable=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    tarea = relationship("Tarea", back_populates="entregas")
+    alumno = relationship("User", foreign_keys=[alumno_id])
+    archivo = relationship("Archivo")
 
 
 class ActividadReciente(Base):

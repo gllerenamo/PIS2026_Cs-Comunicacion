@@ -87,6 +87,52 @@ export interface ActividadReciente {
   estado: ActividadEstado;
 }
 
+/** Estado de una entrega de tarea. */
+export type EntregaEstado = "ENTREGADA" | "CALIFICADA";
+
+/** Entrega de un alumno a una tarea (HU-09). */
+export interface Entrega {
+  id: string;
+  tareaId: string;
+  alumnoId: string;
+  descripcion: string;
+  comentario: string;
+  archivoId: string | null;
+  estado: EntregaEstado;
+  nota: number | null;
+  retroalimentacion: string | null;
+  createdAt: string;
+}
+
+/** Tarea vista desde el alumno con su entrega (HU-09). */
+export interface TareaAlumno {
+  id: string;
+  aulaId: string;
+  titulo: string;
+  descripcion: string;
+  fechaLimite: string | null;
+  createdAt: string;
+  entrega: Entrega | null;
+}
+
+/** Detalle de una calificación (HU-10). */
+export interface DetalleCalificacion {
+  tareaId: string;
+  tareaTitulo: string;
+  nota: number | null;
+  retroalimentacion: string | null;
+  estado: string;
+  entregadaEn: string | null;
+}
+
+/** Resumen de calificaciones del alumno en un aula (HU-10). */
+export interface Calificaciones {
+  promedio: number | null;
+  tareasTotal: number;
+  tareasEntregadas: number;
+  detalle: DetalleCalificacion[];
+}
+
 /** Archivo subido a un aula (HU-07/08). */
 export interface Archivo {
   id: string;

@@ -1,0 +1,98 @@
+.notas-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.notas-panel__muted {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.notas-panel__error {
+  font-size: 13px;
+  color: var(--color-danger);
+}
+
+/* Métricas */
+.notas-metrics {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.notas-metric-card {
+  flex: 1;
+  min-width: 120px;
+  padding: 16px 20px;
+  background: var(--color-primary-soft);
+  border: 1px solid #e5c8cc;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.notas-metric-card__value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+
+.notas-metric-card__label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Tabla */
+.notas-table-wrap {
+  overflow-x: auto;
+}
+
+.notas-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.notas-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--color-bg);
+  border-bottom: 2px solid var(--color-border);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.notas-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.notas-table tr:last-child td {
+  border-bottom: none;
+}
+
+.notas-table__titulo {
+  font-weight: 600;
+}
+
+.notas-table__nota {
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.notas-table__fecha {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.notas-table__retro {
+  color: var(--color-text-muted);
+  max-width: 240px;
+}
