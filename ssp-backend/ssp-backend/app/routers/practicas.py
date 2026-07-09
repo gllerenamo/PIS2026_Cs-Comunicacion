@@ -114,6 +114,27 @@ def get_actual(
     return _to_practica_out(activa)
 
 
+# ── GET /api/v1/practicas/por-aula/{aula_id} ──────────────────────────────────
+
+
+@router.get("/por-aula/{aula_id}", response_model=PracticaOut | None)
+def get_por_aula(
+    aula_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Práctica del practicante autenticado en un aula concreta (bitácora HU-14)."""
+    practica = (
+        db.query(Practica)
+        .filter(
+            Practica.practicante_id == current_user.id,
+            Practica.aula_id == aula_id,
+        )
+        .first()
+    )
+    return _to_practica_out(practica) if practica else None
+
+
 # ── GET /api/v1/practicas/practicantes ────────────────────────────────────────
 
 
