@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { panelService } from "../../services/panelService";
-import type { ResumenEmpresa } from "../../services/panelService";
-import type { User } from "../../types";
+import type { ResumenEmpresa, User } from "../../types";
 import { StatTile } from "./StatTile";
 import "../practicas.css";
 import "./dashboard-panels.css";

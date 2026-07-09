@@ -61,6 +61,116 @@ export interface CreateAulaPayload {
   periodo: string;
 }
 
+/** Vista de un aula desde la perspectiva del alumno inscrito (HU-05). */
+export interface AulaAlumno {
+  id: string;
+  nombre: string;
+  profesorNombre: string;
+  /** Ciclo académico, ej. "2024-II". */
+  ciclo: string;
+  estado: AulaEstado;
+  /** Avance de la práctica, 0–100. */
+  progreso: number;
+  semanaActual: number;
+  semanasTotales: number;
+}
+
+/** Estado de un ítem de actividad reciente. */
+export type ActividadEstado = "PENDIENTE" | "SIN_LEER" | "CALIFICADA";
+
+/** Ítem del feed de actividad reciente del alumno (HU-05). */
+export interface ActividadReciente {
+  id: string;
+  titulo: string;
+  contexto: string;
+  tiempo: string;
+  estado: ActividadEstado;
+}
+
+/** Progreso de un practicante en un aula (HU-11). */
+export interface PracticanteProgreso {
+  alumnoId: string;
+  alumnoNombre: string;
+  alumnoEmail: string;
+  aulaId: string;
+  aulaNombre: string;
+  progreso: number;
+  semanaActual: number;
+  semanasTotales: number;
+  estado: AulaEstado;
+  tareasEntregadas: number;
+  tareasTotal: number;
+}
+
+/** Usuario visto desde el panel de administración (HU-12). */
+export interface UsuarioAdmin {
+  id: string;
+  nombres: string;
+  apellidos: string;
+  email: string;
+  role: Role;
+  createdAt: string;
+}
+
+/** Estado de una entrega de tarea. */
+export type EntregaEstado = "ENTREGADA" | "CALIFICADA";
+
+/** Entrega de un alumno a una tarea (HU-09). */
+export interface Entrega {
+  id: string;
+  tareaId: string;
+  alumnoId: string;
+  descripcion: string;
+  comentario: string;
+  archivoId: string | null;
+  estado: EntregaEstado;
+  nota: number | null;
+  retroalimentacion: string | null;
+  createdAt: string;
+}
+
+/** Tarea vista desde el alumno con su entrega (HU-09). */
+export interface TareaAlumno {
+  id: string;
+  aulaId: string;
+  titulo: string;
+  descripcion: string;
+  fechaLimite: string | null;
+  createdAt: string;
+  entrega: Entrega | null;
+}
+
+/** Detalle de una calificación (HU-10). */
+export interface DetalleCalificacion {
+  tareaId: string;
+  tareaTitulo: string;
+  nota: number | null;
+  retroalimentacion: string | null;
+  estado: string;
+  entregadaEn: string | null;
+}
+
+/** Resumen de calificaciones del alumno en un aula (HU-10). */
+export interface Calificaciones {
+  promedio: number | null;
+  tareasTotal: number;
+  tareasEntregadas: number;
+  detalle: DetalleCalificacion[];
+}
+
+/** Archivo subido a un aula (HU-07/08). */
+export interface Archivo {
+  id: string;
+  aulaId: string;
+  subidoPorId: string;
+  subidoPorNombre: string;
+  nombreOriginal: string;
+  tipoMime: string;
+  /** Tamaño en bytes. */
+  tamanio: number;
+  createdAt: string;
+}
+
 /** Error normalizado que emite la capa de servicios. */
 export interface ApiError {
   status: number;
@@ -262,4 +372,35 @@ export interface Evaluacion {
   periodo: string;
   estado: EvaluacionEstado;
   fechaLimite: string;
+}
+
+/** Practicante con señales de riesgo detectadas por el panel del profesor. */
+export interface AlumnoEnRiesgo {
+  practicanteId: string;
+  practicanteNombre: string;
+  motivos: string[];
+}
+
+/** Panel de control del profesor (HU-22). */
+export interface ResumenProfesor {
+  alumnosActivos: number;
+  entregasPendientes: number;
+  asistenciaPromedio: number | null;
+  alumnosEnRiesgo: AlumnoEnRiesgo[];
+}
+
+/** Panel de control administrativo (HU-23). */
+export interface ResumenAdmin {
+  alumnosMatriculados: number;
+  profesoresActivos: number;
+  aulasActivas: number;
+  centrosDePracticas: number;
+}
+
+/** Panel de control de empresa / supervisor externo (HU-24). */
+export interface ResumenEmpresa {
+  practicantesActivos: number;
+  horasPorValidar: number;
+  evaluacionesPendientes: number;
+  cumplimientoPromedio: number | null;
 }

@@ -7,6 +7,10 @@ import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AulasPage } from "./pages/aulas/AulasPage";
+import { MisAulasPage } from "./pages/alumno/MisAulasPage";
+import { AulaVirtualPage } from "./pages/alumno/AulaVirtualPage";
+import { ProgresoPage } from "./pages/profesor/ProgresoPage";
+import { UsuariosPage } from "./pages/admin/UsuariosPage";
 import { EmpresaPage } from "./pages/empresa/EmpresaPage";
 import { HorasPage } from "./pages/horas/HorasPage";
 import { CierrePage } from "./pages/cierre/CierrePage";
@@ -60,6 +64,28 @@ export default function App() {
               <Route path="/empresa" element={<EmpresaPage />} />
               {/* HU-14: seguimiento de horas acumuladas */}
               <Route path="/horas" element={<HorasPage />} />
+            </Route>
+          </Route>
+
+          {/* Vista del alumno: clases programadas (HU-05) y aula virtual (HU-06) */}
+          <Route element={<ProtectedRoute roles={["ALUMNO"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/mis-aulas" element={<MisAulasPage />} />
+              <Route path="/mis-aulas/:id" element={<AulaVirtualPage />} />
+            </Route>
+          </Route>
+
+          {/* Progreso practicantes (HU-11): Profesor y Admin */}
+          <Route element={<ProtectedRoute roles={["ADMIN", "PROFESOR"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/progreso" element={<ProgresoPage />} />
+            </Route>
+          </Route>
+
+          {/* Gestión de usuarios (HU-12): solo Admin */}
+          <Route element={<ProtectedRoute roles={["ADMIN"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/usuarios" element={<UsuariosPage />} />
             </Route>
           </Route>
 

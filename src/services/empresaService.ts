@@ -5,45 +5,27 @@ import type {
   Supervisor,
   User,
 } from "../types";
-import { delay, rejectAfter } from "./apiClient";
-import { db, genId } from "./mockDb";
+import { http } from "./apiClient";
 
 /**
  * Servicio de registro de empresa/centro de prácticas (HU-13) y de su
- * supervisor externo (HU-19). Solo el propio practicante gestiona sus datos.
+ * supervisor externo (HU-19). Contra el backend FastAPI; la identidad del
+ * practicante se deriva del JWT, no del parámetro `user`.
  */
 export const empresaService = {
   /** Empresa registrada por el practicante autenticado, si existe. */
-  async getMine(user: User): Promise<Empresa | null> {
-    return delay(db.getEmpresaByPracticante(user.id) ?? null);
+  async getMine(_user: User): Promise<Empresa | null> {
+    return http<Empresa | null>("/api/v1/empresa/mine");
   },
 
   /** Supervisor registrado para una empresa, si existe. */
   async getSupervisor(empresaId: string): Promise<Supervisor | null> {
-    return delay(db.getSupervisorByEmpresa(empresaId) ?? null);
+    return http<Supervisor | null>(`/api/v1/empresa/${empresaId}/supervisor`);
   },
 
   /** Registra los datos de la empresa/institución de prácticas (HU-13). */
-  async register(payload: CreateEmpresaPayload, user: User): Promise<Empresa> {
-    if (user.role !== "ALUMNO") {
-      return rejectAfter(403, "Solo el practicante puede registrar su empresa.");
-    }
-    if (db.getEmpresaByPracticante(user.id)) {
-      return rejectAfter(409, "Ya registraste una empresa para tus prácticas.");
-    }
-    const empresa: Empresa = {
-      id: genId("e"),
-      practicanteId: user.id,
-      razonSocial: payload.razonSocial.trim(),
-      ruc: payload.ruc.trim(),
-      direccion: payload.direccion.trim(),
-      sector: payload.sector.trim(),
-      telefono: payload.telefono.trim(),
-      email: payload.email.trim(),
-      fechaRegistro: new Date().toISOString(),
-    };
-    db.addEmpresa(empresa);
-    return delay(empresa);
+  async register(payload: CreateEmpresaPayload, _user: User): Promise<Empresa> {
+    return http<Empresa>("/api/v1/empresa", { method: "POST", body: payload });
   },
 
   /** Registra al supervisor externo asignado en la empresa (HU-19). */
@@ -51,19 +33,9 @@ export const empresaService = {
     empresaId: string,
     payload: CreateSupervisorPayload,
   ): Promise<Supervisor> {
-    if (db.getSupervisorByEmpresa(empresaId)) {
-      return rejectAfter(409, "Ya existe un supervisor registrado para esta empresa.");
-    }
-    const supervisor: Supervisor = {
-      id: genId("s"),
-      empresaId,
-      nombres: payload.nombres.trim(),
-      apellidos: payload.apellidos.trim(),
-      cargo: payload.cargo.trim(),
-      email: payload.email.trim(),
-      telefono: payload.telefono.trim(),
-    };
-    db.addSupervisor(supervisor);
-    return delay(supervisor);
+    return http<Supervisor>(`/api/v1/empresa/${empresaId}/supervisor`, {
+      method: "POST",
+      body: payload,
+    });
   },
 };

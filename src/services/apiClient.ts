@@ -1,29 +1,65 @@
 import type { ApiError } from "../types";
 
 /**
- * Cliente API simulado.
- *
- * Mientras el backend (FastAPI) no esté disponible, esta capa imita la latencia
- * de red y la forma de las respuestas/errores HTTP descritos en el documento de
- * arquitectura. Cuando el backend exista, basta con reemplazar el cuerpo de los
- * servicios por llamadas `fetch` reales: los componentes no cambian.
+ * Cliente HTTP real contra el backend FastAPI del SSP.
+ * Adjunta el JWT guardado y normaliza los errores a la forma `ApiError`.
  */
 
-const BASE_LATENCY = 450;
+export const BASE_URL = (
+  (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8000"
+).replace(/\/$/, "");
 
-/** Simula el tiempo de ida y vuelta de una petición de red. */
-export function delay<T>(value: T, ms: number = BASE_LATENCY): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(value), ms));
+const TOKEN_KEY = "ssp.token";
+
+interface HttpOptions {
+  method?: "GET" | "POST" | "PUT" | "DELETE";
+  body?: unknown;
+  /** Adjuntar el token de sesión (por defecto sí). */
+  auth?: boolean;
 }
 
-/** Construye un error con la forma normalizada de la API. */
-export function apiError(status: number, message: string): ApiError {
-  return { status, message };
-}
+/** Realiza una petición JSON y devuelve el cuerpo tipado, o lanza `ApiError`. */
+export async function http<T>(path: string, opts: HttpOptions = {}): Promise<T> {
+  const { method = "GET", body, auth = true } = opts;
 
-/** Rechaza una promesa tras la latencia simulada (para errores). */
-export function rejectAfter(status: number, message: string): Promise<never> {
-  return new Promise((_, reject) =>
-    setTimeout(() => reject(apiError(status, message)), BASE_LATENCY),
-  );
+  const headers: Record<string, string> = {};
+  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (auth) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) headers.Authorization = `Bearer ${token}`;
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(`${BASE_URL}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    const err: ApiError = {
+      status: 0,
+      message: "No se pudo conectar con el servidor.",
+    };
+    throw err;
+  }
+
+  if (!res.ok) {
+    let message = `Error ${res.status}`;
+    try {
+      const data = await res.json();
+      if (typeof data?.detail === "string") {
+        message = data.detail;
+      } else if (Array.isArray(data?.detail) && data.detail[0]?.msg) {
+        message = data.detail[0].msg;
+      }
+    } catch {
+      /* respuesta sin cuerpo JSON */
+    }
+    const err: ApiError = { status: res.status, message };
+    throw err;
+  }
+
+  if (res.status === 204) return undefined as T;
+  return (await res.json()) as T;
 }

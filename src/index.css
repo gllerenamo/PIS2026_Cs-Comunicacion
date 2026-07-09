@@ -4,19 +4,13 @@
    =========================================================================== */
 
 :root {
-  /* Paleta por defecto (azul clásico) */
-  --color-primary: #1d4ed8;
-  --color-primary-hover: #1e40af;
-  --color-primary-soft: #eff4ff;
+  /* Paleta institucional (guinda / granate — Ciencias de la Comunicación) */
+  --color-primary: #7a1f2b;
+  --color-primary-hover: #641722;
+  --color-primary-soft: #f7ecee;
   --color-primary-contrast: #ffffff;
 
-  /* Tonos para elementos ubicados sobre un fondo --color-primary (topbar, solo tema granate) */
-  --color-on-primary: #ffffff;
-  --color-on-primary-muted: rgba(255, 255, 255, 0.75);
-  --color-on-primary-soft: rgba(255, 255, 255, 0.16);
-  --color-on-primary-border: rgba(255, 255, 255, 0.35);
-
-  --color-accent: #0ea5e9;
+  --color-accent: #b08d57;
 
   /* Estados */
   --color-success: #16a34a;
@@ -36,6 +30,7 @@
 
   /* Tipografía */
   --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: Georgia, "Times New Roman", "Cambria", serif;
 
   /* Radios y sombras */
   --radius-sm: 6px;
@@ -44,14 +39,6 @@
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
   --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
-}
-
-/* Tema alternativo: paleta institucional granate, elegible desde el menú de usuario. */
-:root[data-theme="granate"] {
-  --color-primary: #6b1a2e;
-  --color-primary-hover: #551422;
-  --color-primary-soft: #f7e9ec;
-  --color-primary-contrast: #ffffff;
 }
 
 *,
