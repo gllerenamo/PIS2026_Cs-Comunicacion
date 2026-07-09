@@ -3,11 +3,14 @@ import { adminService } from "../../services/adminService";
 import type { Role, UsuarioAdmin } from "../../types";
 import "./UsuariosPage.css";
 
+// SUPERVISOR no es asignable desde aquí: se aprovisiona junto con el
+// registro de un Supervisor externo (HU-19/24), no por cambio de rol libre.
 const ROLES: Role[] = ["ADMIN", "PROFESOR", "ALUMNO"];
 const ROLE_LABEL: Record<Role, string> = {
   ADMIN: "Administrador",
   PROFESOR: "Profesor",
   ALUMNO: "Alumno",
+  SUPERVISOR: "Supervisor",
 };
 
 type Filtro = "TODOS" | Role;

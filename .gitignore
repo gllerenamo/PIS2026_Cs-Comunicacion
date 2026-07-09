@@ -22,8 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.pyc
 
 .claude
+
+# Backend env / venv
+ssp-backend/ssp-backend/.env
+ssp-backend/ssp-backend/venv/
 
 # Documentos de referencia (no forman parte del código fuente)
 *.pdf.md

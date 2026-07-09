@@ -1,0 +1,61 @@
+/* Paneles de control por rol (HU-22/23/24) */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-tile {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-tile__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.stat-tile__value {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.1;
+}
+
+.stat-tile__hint {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--color-text-soft);
+}
+
+.riesgo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.riesgo-item {
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.riesgo-item__nombre {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.riesgo-item__motivos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

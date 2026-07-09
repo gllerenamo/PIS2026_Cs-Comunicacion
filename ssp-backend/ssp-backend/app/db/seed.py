@@ -16,12 +16,18 @@ from app.models.models import (
     Empresa,
     Entrega,
     EntregaEstadoEnum,
+    Evaluacion,
+    EvaluacionEstadoEnum,
     Inscripcion,
+    Meta,
+    MetaTipoEnum,
     Notificacion,
     NotificacionTipoEnum,
     Practica,
     PracticaEstadoEnum,
+    RegistroAsistencia,
     RegistroHoras,
+    RegistroHorasEstadoEnum,
     RoleEnum,
     Supervisor,
     Tarea,
@@ -60,7 +66,15 @@ def _seed_base(db) -> None:
         hashed_password=hash_password("alumno123"),
         role=RoleEnum.ALUMNO,
     )
-    db.add_all([admin, profesor, alumno])
+    supervisor_user = User(
+        id="u-supervisor",
+        nombres="Marisol",
+        apellidos="Chávez",
+        email="supervisor@radioyaravi.pe",
+        hashed_password=hash_password("supervisor123"),
+        role=RoleEnum.SUPERVISOR,
+    )
+    db.add_all([admin, profesor, alumno, supervisor_user])
     db.flush()  # necesario para FK en aulas
 
     # ── Aulas semilla ──────────────────────────────────────────────────────────
@@ -202,6 +216,7 @@ def _seed_practicas(db) -> None:
         Supervisor(
             id="s-1",
             empresa_id="e-1",
+            user_id="u-supervisor",
             nombres="Marisol",
             apellidos="Chávez",
             cargo="Jefa de Prensa",
@@ -250,6 +265,7 @@ def _seed_practicas(db) -> None:
                 fecha=datetime(2026, 5, 2, tzinfo=timezone.utc),
                 horas=40,
                 descripcion="Producción de notas informativas semanales.",
+                estado_validacion=RegistroHorasEstadoEnum.VALIDADO,
             ),
             RegistroHoras(
                 id="h-2",
@@ -257,6 +273,7 @@ def _seed_practicas(db) -> None:
                 fecha=datetime(2026, 6, 1, tzinfo=timezone.utc),
                 horas=60,
                 descripcion="Edición de contenidos para redes sociales.",
+                estado_validacion=RegistroHorasEstadoEnum.VALIDADO,
             ),
             RegistroHoras(
                 id="h-3",
@@ -264,6 +281,7 @@ def _seed_practicas(db) -> None:
                 fecha=datetime(2026, 6, 25, tzinfo=timezone.utc),
                 horas=48,
                 descripcion="Cobertura de eventos institucionales.",
+                estado_validacion=RegistroHorasEstadoEnum.PENDIENTE,
             ),
         ]
     )
@@ -301,6 +319,92 @@ def _seed_notificaciones(db) -> None:
     print("[OK] Notificaciones insertadas.")
 
 
+def _seed_metas_y_seguimiento(db) -> None:
+    """Metas, asistencia y evaluaciones (HU-20/21/22/24)."""
+    if db.query(Meta).count() > 0:
+        return
+
+    db.add_all(
+        [
+            Meta(
+                id="m-1",
+                practica_id="pr-1",
+                tipo=MetaTipoEnum.NOTAS_PERIODISTICAS,
+                cantidad_objetivo=10,
+                cantidad_alcanzada=4,
+                descripcion="Notas informativas para el boletín semanal.",
+                creado_por="Jose Luis Cuenca",
+                created_at=datetime(2026, 5, 1, tzinfo=timezone.utc),
+            ),
+            Meta(
+                id="m-2",
+                practica_id="pr-1",
+                tipo=MetaTipoEnum.HORAS,
+                cantidad_objetivo=360,
+                cantidad_alcanzada=148,
+                descripcion="Cumplimiento del mínimo reglamentario de horas.",
+                creado_por="Jose Luis Cuenca",
+                created_at=datetime(2026, 4, 5, tzinfo=timezone.utc),
+            ),
+        ]
+    )
+
+    db.add_all(
+        [
+            RegistroAsistencia(
+                id="as-1",
+                practicante_id="u-alumno",
+                aula_id="a-1",
+                fecha=datetime(2026, 5, 4, tzinfo=timezone.utc),
+                presente=1,
+            ),
+            RegistroAsistencia(
+                id="as-2",
+                practicante_id="u-alumno",
+                aula_id="a-1",
+                fecha=datetime(2026, 5, 11, tzinfo=timezone.utc),
+                presente=1,
+            ),
+            RegistroAsistencia(
+                id="as-3",
+                practicante_id="u-alumno",
+                aula_id="a-1",
+                fecha=datetime(2026, 5, 18, tzinfo=timezone.utc),
+                presente=0,
+            ),
+            RegistroAsistencia(
+                id="as-4",
+                practicante_id="u-alumno",
+                aula_id="a-1",
+                fecha=datetime(2026, 5, 25, tzinfo=timezone.utc),
+                presente=1,
+            ),
+        ]
+    )
+
+    db.add_all(
+        [
+            Evaluacion(
+                id="ev-1",
+                practica_id="pr-1",
+                empresa_id="e-1",
+                periodo="2026-I",
+                estado=EvaluacionEstadoEnum.PENDIENTE,
+                fecha_limite=datetime(2026, 7, 20, tzinfo=timezone.utc),
+            ),
+            Evaluacion(
+                id="ev-0",
+                practica_id="pr-0",
+                empresa_id="e-1",
+                periodo="2025-II",
+                estado=EvaluacionEstadoEnum.COMPLETADA,
+                fecha_limite=datetime(2025, 12, 15, tzinfo=timezone.utc),
+            ),
+        ]
+    )
+    print("[OK] Metas, asistencia y evaluaciones insertadas.")
+
+
 def seed():
     # Crea tablas si no existen (alternativa a Alembic para desarrollo rápido)
     Base.metadata.create_all(bind=engine)
@@ -310,6 +414,7 @@ def seed():
         _seed_base(db)
         _seed_practicas(db)
         _seed_notificaciones(db)
+        _seed_metas_y_seguimiento(db)
         db.commit()
         print("[OK] Semilla verificada correctamente.")
     finally:

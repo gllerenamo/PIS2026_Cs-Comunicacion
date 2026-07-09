@@ -5,7 +5,7 @@
  */
 
 /** Roles del sistema (RBAC sobre JWT). */
-export type Role = "ADMIN" | "PROFESOR" | "ALUMNO";
+export type Role = "ADMIN" | "PROFESOR" | "ALUMNO" | "SUPERVISOR";
 
 /** Usuario autenticado. */
 export interface User {
@@ -209,6 +209,8 @@ export interface CreateEmpresaPayload {
 export interface Supervisor {
   id: string;
   empresaId: string;
+  /** Vincula este contacto con una cuenta de login (rol SUPERVISOR, HU-24). */
+  userId?: string;
   nombres: string;
   apellidos: string;
   cargo: string;
@@ -231,6 +233,9 @@ export interface CreateSupervisorPayload {
 /** Estado del ciclo de prácticas del alumno. */
 export type PracticaEstado = "EN_CURSO" | "LISTA_PARA_CIERRE" | "CERRADA";
 
+/** Estado de validación de un registro de horas por el supervisor externo (HU-24). */
+export type RegistroHorasEstado = "PENDIENTE" | "VALIDADO" | "RECHAZADO";
+
 /** Registro individual de horas trabajadas (bitácora). */
 export interface RegistroHoras {
   id: string;
@@ -238,6 +243,7 @@ export interface RegistroHoras {
   fecha: string;
   horas: number;
   descripcion: string;
+  estadoValidacion: RegistroHorasEstado;
 }
 
 /**
@@ -304,4 +310,97 @@ export interface Tarea {
   descripcion: string;
   fechaVencimiento: string;
   completada: boolean;
+}
+
+/* ============================================================
+ * HU-20 · Gestión de metas por practicante
+ * ============================================================ */
+
+/** Tipo de producto periodístico sobre el que se mide una meta. */
+export type MetaTipo = "ARTICULOS" | "NOTAS_PERIODISTICAS" | "NOTAS_PRENSA" | "HORAS";
+
+/** Meta cuantitativa definida por el asesor para medir el avance real de un practicante. */
+export interface Meta {
+  id: string;
+  practicaId: string;
+  practicanteId: string;
+  practicanteNombre: string;
+  tipo: MetaTipo;
+  cantidadObjetivo: number;
+  cantidadAlcanzada: number;
+  descripcion?: string;
+  creadoPor: string;
+  fechaCreacion: string;
+}
+
+export interface CreateMetaPayload {
+  tipo: MetaTipo;
+  cantidadObjetivo: number;
+  descripcion?: string;
+}
+
+export interface RegistrarAvanceMetaPayload {
+  cantidad: number;
+}
+
+/* ============================================================
+ * HU-22 · Panel de control del profesor (asistencia de soporte)
+ * ============================================================ */
+
+/** Registro de asistencia diaria de un practicante a su aula/práctica. */
+export interface RegistroAsistencia {
+  id: string;
+  practicanteId: string;
+  aulaId: string;
+  fecha: string;
+  presente: boolean;
+}
+
+/* ============================================================
+ * HU-24 · Panel de control de empresa (supervisor externo)
+ * ============================================================ */
+
+/** Estado de la evaluación de desempeño de un practicante por su supervisor externo. */
+export type EvaluacionEstado = "PENDIENTE" | "COMPLETADA";
+
+export interface Evaluacion {
+  id: string;
+  practicaId: string;
+  practicanteId: string;
+  practicanteNombre: string;
+  empresaId: string;
+  periodo: string;
+  estado: EvaluacionEstado;
+  fechaLimite: string;
+}
+
+/** Practicante con señales de riesgo detectadas por el panel del profesor. */
+export interface AlumnoEnRiesgo {
+  practicanteId: string;
+  practicanteNombre: string;
+  motivos: string[];
+}
+
+/** Panel de control del profesor (HU-22). */
+export interface ResumenProfesor {
+  alumnosActivos: number;
+  entregasPendientes: number;
+  asistenciaPromedio: number | null;
+  alumnosEnRiesgo: AlumnoEnRiesgo[];
+}
+
+/** Panel de control administrativo (HU-23). */
+export interface ResumenAdmin {
+  alumnosMatriculados: number;
+  profesoresActivos: number;
+  aulasActivas: number;
+  centrosDePracticas: number;
+}
+
+/** Panel de control de empresa / supervisor externo (HU-24). */
+export interface ResumenEmpresa {
+  practicantesActivos: number;
+  horasPorValidar: number;
+  evaluacionesPendientes: number;
+  cumplimientoPromedio: number | null;
 }

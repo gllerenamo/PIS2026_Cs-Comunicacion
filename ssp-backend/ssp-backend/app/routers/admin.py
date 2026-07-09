@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 
 from app.core.deps import get_current_user
 from app.db.session import get_db
-from app.models.models import RoleEnum, User
-from app.schemas.schemas import UpdateRolRequest, UsuarioAdminOut
+from app.models.models import Aula, AulaEstadoEnum, Empresa, RoleEnum, User
+from app.schemas.schemas import ResumenAdminOut, UpdateRolRequest, UsuarioAdminOut
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -71,3 +71,41 @@ def update_rol(
     db.commit()
     db.refresh(usuario)
     return _to_out(usuario)
+
+
+# ── GET /api/v1/admin/resumen ─────────────────────────────────────────────────
+
+
+@router.get("/resumen", response_model=ResumenAdminOut)
+def resumen_admin(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Panel de control administrativo (HU-23)."""
+    _solo_admin(current_user)
+
+    alumnos_matriculados = db.query(User).filter(User.role == RoleEnum.ALUMNO).count()
+
+    profesores = db.query(User).filter(User.role == RoleEnum.PROFESOR).all()
+    profesores_activos = 0
+    for p in profesores:
+        tiene_aula_activa = (
+            db.query(Aula)
+            .filter(Aula.profesor_id == p.id, Aula.estado == AulaEstadoEnum.ACTIVA)
+            .first()
+        )
+        if tiene_aula_activa:
+            profesores_activos += 1
+
+    aulas_activas = db.query(Aula).filter(Aula.estado == AulaEstadoEnum.ACTIVA).count()
+
+    # Empresa es hoy 1:1 por alumno (no un catálogo normalizado de centros de
+    # prácticas); se cuenta por RUC distinto para no duplicar el mismo centro.
+    rucs = {e.ruc for e in db.query(Empresa).all()}
+
+    return ResumenAdminOut(
+        alumnosMatriculados=alumnos_matriculados,
+        profesoresActivos=profesores_activos,
+        aulasActivas=aulas_activas,
+        centrosDePracticas=len(rucs),
+    )

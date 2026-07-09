@@ -31,6 +31,7 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
       items: [
         { to: "/empresa", label: "Mi empresa", enabled: true },
         { to: "/horas", label: "Horas acumuladas", enabled: true },
+        { to: "/metas", label: "Metas por practicante", enabled: true },
         { to: "/reporte", label: "Reporte final", enabled: true },
         { to: "/bitacora", label: "Mi bitácora", enabled: true },
         { to: "/calificaciones", label: "Calificaciones" },
@@ -62,6 +63,7 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
       items: [
         { to: "/cierre", label: "Cierre y validación", enabled: true },
         { to: "/historial", label: "Historial de practicantes", enabled: true },
+        { to: "/metas", label: "Metas por practicante", enabled: true },
         { to: "/reporte", label: "Reporte final", enabled: true },
       ],
     },
@@ -81,8 +83,15 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
       items: [
         { to: "/cierre", label: "Cierre y validación", enabled: true },
         { to: "/historial", label: "Historial de practicantes", enabled: true },
+        { to: "/metas", label: "Metas por practicante", enabled: true },
         { to: "/reporte", label: "Reporte final", enabled: true },
       ],
+    },
+  ],
+  SUPERVISOR: [
+    {
+      title: "Principal",
+      items: [{ to: "/dashboard", label: "Inicio", enabled: true }],
     },
   ],
 };

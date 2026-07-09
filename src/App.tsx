@@ -17,6 +17,7 @@ import { HorasPage } from "./pages/horas/HorasPage";
 import { CierrePage } from "./pages/cierre/CierrePage";
 import { ReportePage } from "./pages/reporte/ReportePage";
 import { HistorialPage } from "./pages/historial/HistorialPage";
+import { MetasPage } from "./pages/metas/MetasPage";
 
 export default function App() {
   return (
@@ -31,9 +32,18 @@ export default function App() {
           {/* Rutas protegidas (requieren sesión) */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
+              {/* HU-22/23/24: el panel se adapta al rol (profesor/admin/supervisor/alumno) */}
               <Route path="/dashboard" element={<DashboardPage />} />
-              {/* HU-16: reporte final, visible para alumno y docente/admin */}
+            </Route>
+          </Route>
+
+          {/* Compartidas entre alumno, profesor y admin — el supervisor externo no accede aquí */}
+          <Route element={<ProtectedRoute roles={["ADMIN", "PROFESOR", "ALUMNO"]} />}>
+            <Route element={<AppLayout />}>
+              {/* HU-16: reporte final */}
               <Route path="/reporte" element={<ReportePage />} />
+              {/* HU-20: metas por practicante */}
+              <Route path="/metas" element={<MetasPage />} />
             </Route>
           </Route>
 

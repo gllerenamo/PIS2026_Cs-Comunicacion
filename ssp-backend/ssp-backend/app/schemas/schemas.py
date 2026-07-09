@@ -8,7 +8,7 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, EmailStr, field_validator
 
-Role = Literal["ADMIN", "PROFESOR", "ALUMNO"]
+Role = Literal["ADMIN", "PROFESOR", "ALUMNO", "SUPERVISOR"]
 AulaEstado = Literal["ACTIVA", "CONCLUIDA"]
 ActividadEstado = Literal["PENDIENTE", "SIN_LEER", "CALIFICADA"]
 
@@ -269,6 +269,7 @@ class SupervisorOut(BaseModel):
 
     id: str
     empresaId: str
+    userId: Optional[str] = None
     nombres: str
     apellidos: str
     cargo: str
@@ -312,6 +313,9 @@ class PracticaOut(BaseModel):
     validadoPor: Optional[str] = None
 
 
+RegistroHorasEstado = Literal["PENDIENTE", "VALIDADO", "RECHAZADO"]
+
+
 class RegistroHorasOut(BaseModel):
     """Idéntico a la interfaz RegistroHoras del frontend."""
 
@@ -320,6 +324,7 @@ class RegistroHorasOut(BaseModel):
     fecha: str
     horas: int
     descripcion: str
+    estadoValidacion: RegistroHorasEstado
 
 
 class RegistrarHorasRequest(BaseModel):
@@ -363,3 +368,98 @@ class NotificacionOut(BaseModel):
     mensaje: str
     leida: bool
     fecha: str
+
+
+# ── Metas por practicante (HU-20/21) ──────────────────────────────────────────
+
+MetaTipo = Literal["ARTICULOS", "NOTAS_PERIODISTICAS", "NOTAS_PRENSA", "HORAS"]
+
+
+class MetaOut(BaseModel):
+    """Idéntico a la interfaz Meta del frontend."""
+
+    id: str
+    practicaId: str
+    practicanteId: str
+    practicanteNombre: str
+    tipo: MetaTipo
+    cantidadObjetivo: int
+    cantidadAlcanzada: int
+    descripcion: Optional[str] = None
+    creadoPor: str
+    fechaCreacion: str
+
+
+class CreateMetaRequest(BaseModel):
+    """Idéntico a CreateMetaPayload del frontend."""
+
+    tipo: MetaTipo
+    cantidadObjetivo: int
+    descripcion: Optional[str] = None
+
+
+class RegistrarAvanceMetaRequest(BaseModel):
+    """Idéntico a RegistrarAvanceMetaPayload del frontend."""
+
+    cantidad: int
+
+
+# ── Asistencia (soporte de HU-22) ─────────────────────────────────────────────
+
+
+class RegistroAsistenciaOut(BaseModel):
+    """Idéntico a la interfaz RegistroAsistencia del frontend."""
+
+    id: str
+    practicanteId: str
+    aulaId: str
+    fecha: str
+    presente: bool
+
+
+# ── Evaluaciones (soporte de HU-24) ───────────────────────────────────────────
+
+EvaluacionEstado = Literal["PENDIENTE", "COMPLETADA"]
+
+
+class EvaluacionOut(BaseModel):
+    """Idéntico a la interfaz Evaluacion del frontend."""
+
+    id: str
+    practicaId: str
+    practicanteId: str
+    practicanteNombre: str
+    empresaId: str
+    periodo: str
+    estado: EvaluacionEstado
+    fechaLimite: str
+
+
+# ── Paneles de control por rol (HU-22/23/24) ──────────────────────────────────
+
+
+class AlumnoEnRiesgoOut(BaseModel):
+    practicanteId: str
+    practicanteNombre: str
+    motivos: list[str]
+
+
+class ResumenProfesorOut(BaseModel):
+    alumnosActivos: int
+    entregasPendientes: int
+    asistenciaPromedio: Optional[int] = None
+    alumnosEnRiesgo: list[AlumnoEnRiesgoOut]
+
+
+class ResumenAdminOut(BaseModel):
+    alumnosMatriculados: int
+    profesoresActivos: int
+    aulasActivas: int
+    centrosDePracticas: int
+
+
+class ResumenEmpresaOut(BaseModel):
+    practicantesActivos: int
+    horasPorValidar: int
+    evaluacionesPendientes: int
+    cumplimientoPromedio: Optional[int] = None

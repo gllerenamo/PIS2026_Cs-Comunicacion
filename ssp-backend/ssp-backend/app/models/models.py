@@ -24,6 +24,7 @@ class RoleEnum(str, enum.Enum):
     ADMIN = "ADMIN"
     PROFESOR = "PROFESOR"
     ALUMNO = "ALUMNO"
+    SUPERVISOR = "SUPERVISOR"
 
 
 class AulaEstadoEnum(str, enum.Enum):
@@ -51,6 +52,24 @@ class PracticaEstadoEnum(str, enum.Enum):
 class NotificacionTipoEnum(str, enum.Enum):
     TAREA_ASIGNADA = "TAREA_ASIGNADA"
     VENCIMIENTO = "VENCIMIENTO"
+
+
+class RegistroHorasEstadoEnum(str, enum.Enum):
+    PENDIENTE = "PENDIENTE"
+    VALIDADO = "VALIDADO"
+    RECHAZADO = "RECHAZADO"
+
+
+class MetaTipoEnum(str, enum.Enum):
+    ARTICULOS = "ARTICULOS"
+    NOTAS_PERIODISTICAS = "NOTAS_PERIODISTICAS"
+    NOTAS_PRENSA = "NOTAS_PRENSA"
+    HORAS = "HORAS"
+
+
+class EvaluacionEstadoEnum(str, enum.Enum):
+    PENDIENTE = "PENDIENTE"
+    COMPLETADA = "COMPLETADA"
 
 
 # ── Tablas ──────────────────────────────────────────────────────────────────────
@@ -228,6 +247,8 @@ class Supervisor(Base):
     empresa_id = Column(
         String, ForeignKey("empresas.id"), nullable=False, unique=True, index=True
     )
+    # Vincula este contacto con una cuenta de login (rol SUPERVISOR, HU-24).
+    user_id = Column(String, ForeignKey("users.id"), nullable=True, unique=True, index=True)
     nombres = Column(String(100), nullable=False)
     apellidos = Column(String(100), nullable=False)
     cargo = Column(String(120), nullable=False, default="")
@@ -285,6 +306,11 @@ class RegistroHoras(Base):
     )
     horas = Column(Integer, nullable=False)
     descripcion = Column(Text, nullable=False, default="")
+    estado_validacion = Column(
+        Enum(RegistroHorasEstadoEnum),
+        nullable=False,
+        default=RegistroHorasEstadoEnum.PENDIENTE,
+    )
 
     practica = relationship("Practica", back_populates="registros_horas")
 
@@ -307,3 +333,57 @@ class Notificacion(Base):
     )
 
     user = relationship("User")
+
+
+class Meta(Base):
+    """Meta cuantitativa definida por el asesor para medir el avance real de un practicante (HU-20/21)."""
+
+    __tablename__ = "metas"
+
+    id = Column(String, primary_key=True, default=lambda: f"m-{uuid.uuid4().hex[:10]}")
+    practica_id = Column(String, ForeignKey("practicas.id"), nullable=False, index=True)
+    tipo = Column(Enum(MetaTipoEnum), nullable=False)
+    cantidad_objetivo = Column(Integer, nullable=False)
+    cantidad_alcanzada = Column(Integer, nullable=False, default=0)
+    descripcion = Column(Text, nullable=True)
+    creado_por = Column(String(200), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    practica = relationship("Practica")
+
+
+class RegistroAsistencia(Base):
+    """Registro de asistencia diaria de un practicante a su aula/práctica (HU-22)."""
+
+    __tablename__ = "asistencias"
+
+    id = Column(String, primary_key=True, default=lambda: f"as-{uuid.uuid4().hex[:8]}")
+    practicante_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    aula_id = Column(String, ForeignKey("aulas.id"), nullable=False, index=True)
+    fecha = Column(DateTime(timezone=True), nullable=False)
+    presente = Column(Integer, nullable=False, default=1)  # 0 / 1 (bool en SQLite)
+
+    practicante = relationship("User")
+    aula = relationship("Aula")
+
+
+class Evaluacion(Base):
+    """Evaluación de desempeño de un practicante por su supervisor externo (HU-24)."""
+
+    __tablename__ = "evaluaciones"
+
+    id = Column(String, primary_key=True, default=lambda: f"ev-{uuid.uuid4().hex[:8]}")
+    practica_id = Column(String, ForeignKey("practicas.id"), nullable=False, index=True)
+    empresa_id = Column(String, ForeignKey("empresas.id"), nullable=False, index=True)
+    periodo = Column(String(20), nullable=False)
+    estado = Column(
+        Enum(EvaluacionEstadoEnum), nullable=False, default=EvaluacionEstadoEnum.PENDIENTE
+    )
+    fecha_limite = Column(DateTime(timezone=True), nullable=True)
+
+    practica = relationship("Practica")
+    empresa = relationship("Empresa")
