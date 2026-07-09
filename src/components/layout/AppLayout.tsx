@@ -1,8 +1,8 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import type { Role } from "../../types";
 import { Logo } from "../Logo";
 import { NotificationBell } from "./NotificationBell";
-import { ThemeToggle } from "./ThemeToggle";
+import { UserMenu } from "./UserMenu";
 import { useAuth } from "../../hooks/useAuth";
 import "./AppLayout.css";
 
@@ -32,21 +32,13 @@ const ROLE_LABEL: Record<Role, string> = {
 
 /** Shell de la aplicación autenticada: barra lateral + cabecera + contenido. */
 export function AppLayout() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   if (!user) return null;
 
   const visibleNav = NAV.filter(
     (item) => !item.roles || item.roles.includes(user.role),
   );
-
-  function handleLogout() {
-    logout();
-    navigate("/login", { replace: true });
-  }
-
-  const initials = `${user.nombres[0] ?? ""}${user.apellidos[0] ?? ""}`.toUpperCase();
 
   return (
     <div className="app">
@@ -73,15 +65,8 @@ export function AppLayout() {
         <header className="app__topbar">
           <span className="app__role-tag">{ROLE_LABEL[user.role]}</span>
           <div className="app__user">
-            <ThemeToggle />
             <NotificationBell />
-            <span className="app__avatar">{initials}</span>
-            <span className="app__user-name">
-              {user.nombres} {user.apellidos}
-            </span>
-            <button className="app__logout" onClick={handleLogout}>
-              Cerrar sesión
-            </button>
+            <UserMenu />
           </div>
         </header>
 

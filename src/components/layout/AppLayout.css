@@ -56,8 +56,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 28px;
-  background: var(--color-primary);
-  border-bottom: none;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .app__role-tag {
@@ -65,8 +65,8 @@
   font-weight: 700;
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  color: var(--color-on-primary);
-  background: var(--color-on-primary-soft);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
   padding: 5px 10px;
   border-radius: 999px;
 }
@@ -83,8 +83,8 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--color-on-primary);
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
   font-size: 13px;
   font-weight: 700;
 }
@@ -92,72 +92,31 @@
 .app__user-name {
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-on-primary);
-}
-
-.app__logout {
-  padding: 7px 12px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-on-primary-muted);
-  background: transparent;
-  border: 1px solid var(--color-on-primary-border);
-  border-radius: var(--radius-md);
-}
-.app__logout:hover {
-  color: #fff;
-  background: var(--color-danger);
-  border-color: var(--color-danger);
+  color: var(--color-text);
 }
 
 .app__topbar .notif__trigger:hover {
-  background: var(--color-on-primary-soft);
-}
-
-.theme-toggle {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--color-on-primary-muted);
-  background: transparent;
-  border: 1px solid var(--color-on-primary-border);
-  border-radius: var(--radius-md);
-  padding: 6px 8px;
-}
-.theme-toggle option {
-  color: var(--color-text);
-}
-
-/* Tema azul clásico: el topbar vuelve a ser claro (diseño previo al retema granate). */
-:root[data-theme="azul"] .app__topbar {
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-}
-:root[data-theme="azul"] .app__role-tag {
-  color: var(--color-primary);
-  background: var(--color-primary-soft);
-}
-:root[data-theme="azul"] .app__avatar {
-  background: var(--color-primary);
-  color: #fff;
-}
-:root[data-theme="azul"] .app__user-name {
-  color: var(--color-text);
-}
-:root[data-theme="azul"] .app__logout {
-  color: var(--color-text-muted);
-  border-color: var(--color-border);
-}
-:root[data-theme="azul"] .app__logout:hover {
-  color: var(--color-danger);
-  background: transparent;
-  border-color: var(--color-danger);
-}
-:root[data-theme="azul"] .app__topbar .notif__trigger:hover {
   background: var(--color-bg);
 }
-:root[data-theme="azul"] .theme-toggle {
-  color: var(--color-text-muted);
-  border-color: var(--color-border);
+
+/* Tema granate: el topbar pasa a fondo oscuro, hace falta invertir el contraste de sus elementos. */
+:root[data-theme="granate"] .app__topbar {
+  background: var(--color-primary);
+  border-bottom: none;
+}
+:root[data-theme="granate"] .app__role-tag {
+  color: var(--color-on-primary);
+  background: var(--color-on-primary-soft);
+}
+:root[data-theme="granate"] .app__avatar {
+  background: var(--color-on-primary);
+  color: var(--color-primary);
+}
+:root[data-theme="granate"] .app__user-name {
+  color: var(--color-on-primary);
+}
+:root[data-theme="granate"] .app__topbar .notif__trigger:hover {
+  background: var(--color-on-primary-soft);
 }
 
 .app__content {

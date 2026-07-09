@@ -5,7 +5,7 @@ export type ThemeName = "granate" | "azul";
 const THEME_KEY = "ssp.theme";
 
 function readStoredTheme(): ThemeName {
-  return localStorage.getItem(THEME_KEY) === "azul" ? "azul" : "granate";
+  return localStorage.getItem(THEME_KEY) === "granate" ? "granate" : "azul";
 }
 
 /** Preferencia de tema de color (granate institucional o azul clásico), persistida en localStorage. */

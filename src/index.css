@@ -4,13 +4,13 @@
    =========================================================================== */
 
 :root {
-  /* Paleta institucional (granate) */
-  --color-primary: #6b1a2e;
-  --color-primary-hover: #551422;
-  --color-primary-soft: #f7e9ec;
+  /* Paleta por defecto (azul clásico) */
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-soft: #eff4ff;
   --color-primary-contrast: #ffffff;
 
-  /* Tonos para elementos ubicados sobre un fondo --color-primary (topbar) */
+  /* Tonos para elementos ubicados sobre un fondo --color-primary (topbar, solo tema granate) */
   --color-on-primary: #ffffff;
   --color-on-primary-muted: rgba(255, 255, 255, 0.75);
   --color-on-primary-soft: rgba(255, 255, 255, 0.16);
@@ -46,11 +46,11 @@
   --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
 }
 
-/* Tema alternativo: paleta original (azul académico), elegible desde el topbar. */
-:root[data-theme="azul"] {
-  --color-primary: #1d4ed8;
-  --color-primary-hover: #1e40af;
-  --color-primary-soft: #eff4ff;
+/* Tema alternativo: paleta institucional granate, elegible desde el menú de usuario. */
+:root[data-theme="granate"] {
+  --color-primary: #6b1a2e;
+  --color-primary-hover: #551422;
+  --color-primary-soft: #f7e9ec;
   --color-primary-contrast: #ffffff;
 }
 
