@@ -22,6 +22,11 @@ export const practicaService = {
     return http<Practica | null>("/api/v1/practicas/actual");
   },
 
+  /** Práctica del practicante autenticado en un aula concreta (bitácora HU-14). */
+  async getPorAula(aulaId: string): Promise<Practica | null> {
+    return http<Practica | null>(`/api/v1/practicas/por-aula/${aulaId}`);
+  },
+
   /** Bitácora de horas registradas para una práctica (HU-14). */
   async getHoras(practicaId: string): Promise<RegistroHoras[]> {
     return http<RegistroHoras[]>(`/api/v1/practicas/${practicaId}/horas`);

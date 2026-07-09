@@ -9,6 +9,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { AulasPage } from "./pages/aulas/AulasPage";
 import { MisAulasPage } from "./pages/alumno/MisAulasPage";
 import { AulaVirtualPage } from "./pages/alumno/AulaVirtualPage";
+import { BitacoraPage } from "./pages/alumno/BitacoraPage";
 import { ProgresoPage } from "./pages/profesor/ProgresoPage";
 import { UsuariosPage } from "./pages/admin/UsuariosPage";
 import { EmpresaPage } from "./pages/empresa/EmpresaPage";
@@ -72,6 +73,7 @@ export default function App() {
             <Route element={<AppLayout />}>
               <Route path="/mis-aulas" element={<MisAulasPage />} />
               <Route path="/mis-aulas/:id" element={<AulaVirtualPage />} />
+              <Route path="/bitacora" element={<BitacoraPage />} />
             </Route>
           </Route>
 

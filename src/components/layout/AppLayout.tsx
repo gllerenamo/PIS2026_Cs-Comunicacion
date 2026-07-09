@@ -33,7 +33,7 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
         { to: "/horas", label: "Horas acumuladas", enabled: true },
         { to: "/metas", label: "Metas por practicante", enabled: true },
         { to: "/reporte", label: "Reporte final", enabled: true },
-        { to: "/bitacora", label: "Mi bitácora" },
+        { to: "/bitacora", label: "Mi bitácora", enabled: true },
         { to: "/calificaciones", label: "Calificaciones" },
       ],
     },
