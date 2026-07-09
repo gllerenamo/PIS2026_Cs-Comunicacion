@@ -1,6 +1,7 @@
 import type {
   Aula,
   Empresa,
+  Meta,
   Notificacion,
   Practica,
   RegistroHoras,
@@ -26,6 +27,7 @@ const PRACTICAS_KEY = "ssp.practicas";
 const HORAS_KEY = "ssp.horas";
 const TAREAS_KEY = "ssp.tareas";
 const NOTIFICACIONES_KEY = "ssp.notificaciones";
+const METAS_KEY = "ssp.metas";
 
 /** Cuentas semilla para poder iniciar sesión sin registrar. */
 const SEED_USERS: StoredUser[] = [
@@ -209,6 +211,33 @@ const SEED_NOTIFICACIONES: Notificacion[] = [
   },
 ];
 
+const SEED_METAS: Meta[] = [
+  {
+    id: "m-1",
+    practicaId: "pr-1",
+    practicanteId: "u-alumno",
+    practicanteNombre: "Piero Mejía",
+    tipo: "NOTAS_PERIODISTICAS",
+    cantidadObjetivo: 10,
+    cantidadAlcanzada: 4,
+    descripcion: "Notas informativas para el boletín semanal.",
+    creadoPor: "Jose Luis Cuenca",
+    fechaCreacion: new Date("2026-05-01").toISOString(),
+  },
+  {
+    id: "m-2",
+    practicaId: "pr-1",
+    practicanteId: "u-alumno",
+    practicanteNombre: "Piero Mejía",
+    tipo: "HORAS",
+    cantidadObjetivo: HORAS_MINIMAS_REGLAMENTO,
+    cantidadAlcanzada: 148,
+    descripcion: "Cumplimiento del mínimo reglamentario de horas.",
+    creadoPor: "Jose Luis Cuenca",
+    fechaCreacion: new Date("2026-04-05").toISOString(),
+  },
+];
+
 function read<T>(key: string, seed: T[]): T[] {
   const raw = localStorage.getItem(key);
   if (!raw) {
@@ -322,6 +351,30 @@ export const db = {
     const registros = read(HORAS_KEY, SEED_HORAS);
     registros.unshift(registro);
     write(HORAS_KEY, registros);
+  },
+
+  /* ----- Metas (HU-20) ----- */
+  getMetas(): Meta[] {
+    return read(METAS_KEY, SEED_METAS);
+  },
+  getMetaById(id: string): Meta | undefined {
+    return this.getMetas().find((m) => m.id === id);
+  },
+  getMetasByPracticante(practicanteId: string): Meta[] {
+    return this.getMetas().filter((m) => m.practicanteId === practicanteId);
+  },
+  getMetasByDocente(profesorId: string): Meta[] {
+    const practicaIds = this.getPracticasByDocente(profesorId).map((p) => p.id);
+    return this.getMetas().filter((m) => practicaIds.includes(m.practicaId));
+  },
+  addMeta(meta: Meta): void {
+    const metas = this.getMetas();
+    metas.unshift(meta);
+    write(METAS_KEY, metas);
+  },
+  updateMeta(meta: Meta): void {
+    const metas = this.getMetas().map((m) => (m.id === meta.id ? meta : m));
+    write(METAS_KEY, metas);
   },
 
   /* ----- Tareas (HU-17) ----- */

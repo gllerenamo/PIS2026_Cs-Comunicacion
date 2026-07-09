@@ -195,3 +195,34 @@ export interface Tarea {
   fechaVencimiento: string;
   completada: boolean;
 }
+
+/* ============================================================
+ * HU-20 · Gestión de metas por practicante
+ * ============================================================ */
+
+/** Tipo de producto periodístico sobre el que se mide una meta. */
+export type MetaTipo = "ARTICULOS" | "NOTAS_PERIODISTICAS" | "NOTAS_PRENSA" | "HORAS";
+
+/** Meta cuantitativa definida por el asesor para medir el avance real de un practicante. */
+export interface Meta {
+  id: string;
+  practicaId: string;
+  practicanteId: string;
+  practicanteNombre: string;
+  tipo: MetaTipo;
+  cantidadObjetivo: number;
+  cantidadAlcanzada: number;
+  descripcion?: string;
+  creadoPor: string;
+  fechaCreacion: string;
+}
+
+export interface CreateMetaPayload {
+  tipo: MetaTipo;
+  cantidadObjetivo: number;
+  descripcion?: string;
+}
+
+export interface RegistrarAvanceMetaPayload {
+  cantidad: number;
+}

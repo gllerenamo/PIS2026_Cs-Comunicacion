@@ -12,6 +12,7 @@ import { HorasPage } from "./pages/horas/HorasPage";
 import { CierrePage } from "./pages/cierre/CierrePage";
 import { ReportePage } from "./pages/reporte/ReportePage";
 import { HistorialPage } from "./pages/historial/HistorialPage";
+import { MetasPage } from "./pages/metas/MetasPage";
 
 export default function App() {
   return (
@@ -29,6 +30,8 @@ export default function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               {/* HU-16: reporte final, visible para alumno y docente/admin */}
               <Route path="/reporte" element={<ReportePage />} />
+              {/* HU-20: metas por practicante, visible para alumno y docente/admin */}
+              <Route path="/metas" element={<MetasPage />} />
             </Route>
           </Route>
 

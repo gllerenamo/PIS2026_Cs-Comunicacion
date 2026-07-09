@@ -18,6 +18,7 @@ const NAV: NavItem[] = [
   { to: "/horas", label: "Horas acumuladas", roles: ["ALUMNO"] },
   { to: "/cierre", label: "Cierre y validación", roles: ["ADMIN", "PROFESOR"] },
   { to: "/historial", label: "Historial de practicantes", roles: ["ADMIN", "PROFESOR"] },
+  { to: "/metas", label: "Metas por practicante" },
   { to: "/reporte", label: "Reporte final" },
 ];
 
