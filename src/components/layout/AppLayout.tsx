@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import type { Role } from "../../types";
 import { Logo } from "../Logo";
 import { NotificationBell } from "./NotificationBell";
+import { ThemeToggle } from "./ThemeToggle";
 import { useAuth } from "../../hooks/useAuth";
 import "./AppLayout.css";
 
@@ -72,6 +73,7 @@ export function AppLayout() {
         <header className="app__topbar">
           <span className="app__role-tag">{ROLE_LABEL[user.role]}</span>
           <div className="app__user">
+            <ThemeToggle />
             <NotificationBell />
             <span className="app__avatar">{initials}</span>
             <span className="app__user-name">

@@ -46,6 +46,14 @@
   --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
 }
 
+/* Tema alternativo: paleta original (azul académico), elegible desde el topbar. */
+:root[data-theme="azul"] {
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-soft: #eff4ff;
+  --color-primary-contrast: #ffffff;
+}
+
 *,
 *::before,
 *::after {

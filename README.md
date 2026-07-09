@@ -18,7 +18,7 @@ Según `SSP_ARQ_ArquitecturaDelSistema_V1.0`:
 
 - **React 19 + TypeScript** (Vite)
 - **React Router** para el enrutamiento SPA
-- Autenticación **JWT + RBAC** (roles: `ADMIN`, `PROFESOR`, `ALUMNO`)
+- Autenticación **JWT + RBAC** (roles: `ADMIN`, `PROFESOR`, `ALUMNO`, `SUPERVISOR`)
 - Despliegue previsto en **Vercel**
 
 > El backend (FastAPI + PostgreSQL) aún no está disponible. La carpeta
@@ -43,6 +43,7 @@ Según `SSP_ARQ_ArquitecturaDelSistema_V1.0`:
 | HU-18 | Historial de prácticas por practicante     | `/historial`           |
 | HU-19 | Gestión del supervisor externo             | `/empresa`             |
 | HU-20 | Gestión de metas por practicante           | `/metas`               |
+| HU-21 | Progreso por metas (vista del practicante) | `/metas`               |
 | HU-22 | Panel de control del profesor              | `/dashboard`           |
 | HU-23 | Panel de control administrativo            | `/dashboard`           |
 | HU-24 | Panel de control de empresa (supervisor)   | `/dashboard`           |
