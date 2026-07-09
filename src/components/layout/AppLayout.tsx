@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import type { Role } from "../../types";
 import { Logo } from "../Logo";
+import { NotificationBell } from "./NotificationBell";
 import { useAuth } from "../../hooks/useAuth";
 import "./AppLayout.css";
 
@@ -13,6 +14,11 @@ interface NavItem {
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Inicio" },
   { to: "/aulas", label: "Clases y prácticas", roles: ["ADMIN", "PROFESOR"] },
+  { to: "/empresa", label: "Mi empresa", roles: ["ALUMNO"] },
+  { to: "/horas", label: "Horas acumuladas", roles: ["ALUMNO"] },
+  { to: "/cierre", label: "Cierre y validación", roles: ["ADMIN", "PROFESOR"] },
+  { to: "/historial", label: "Historial de practicantes", roles: ["ADMIN", "PROFESOR"] },
+  { to: "/reporte", label: "Reporte final" },
 ];
 
 const ROLE_LABEL: Record<Role, string> = {
@@ -64,6 +70,7 @@ export function AppLayout() {
         <header className="app__topbar">
           <span className="app__role-tag">{ROLE_LABEL[user.role]}</span>
           <div className="app__user">
+            <NotificationBell />
             <span className="app__avatar">{initials}</span>
             <span className="app__user-name">
               {user.nombres} {user.apellidos}
