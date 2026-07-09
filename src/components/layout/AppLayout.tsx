@@ -18,14 +18,15 @@ const NAV: NavItem[] = [
   { to: "/horas", label: "Horas acumuladas", roles: ["ALUMNO"] },
   { to: "/cierre", label: "Cierre y validación", roles: ["ADMIN", "PROFESOR"] },
   { to: "/historial", label: "Historial de practicantes", roles: ["ADMIN", "PROFESOR"] },
-  { to: "/metas", label: "Metas por practicante" },
-  { to: "/reporte", label: "Reporte final" },
+  { to: "/metas", label: "Metas por practicante", roles: ["ADMIN", "PROFESOR", "ALUMNO"] },
+  { to: "/reporte", label: "Reporte final", roles: ["ADMIN", "PROFESOR", "ALUMNO"] },
 ];
 
 const ROLE_LABEL: Record<Role, string> = {
   ADMIN: "Administrador",
   PROFESOR: "Profesor",
   ALUMNO: "Alumno",
+  SUPERVISOR: "Supervisor",
 };
 
 /** Shell de la aplicación autenticada: barra lateral + cabecera + contenido. */

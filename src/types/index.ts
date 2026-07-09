@@ -5,7 +5,7 @@
  */
 
 /** Roles del sistema (RBAC sobre JWT). */
-export type Role = "ADMIN" | "PROFESOR" | "ALUMNO";
+export type Role = "ADMIN" | "PROFESOR" | "ALUMNO" | "SUPERVISOR";
 
 /** Usuario autenticado. */
 export interface User {
@@ -99,6 +99,8 @@ export interface CreateEmpresaPayload {
 export interface Supervisor {
   id: string;
   empresaId: string;
+  /** Vincula este contacto con una cuenta de login (rol SUPERVISOR, HU-24). */
+  userId?: string;
   nombres: string;
   apellidos: string;
   cargo: string;
@@ -121,6 +123,9 @@ export interface CreateSupervisorPayload {
 /** Estado del ciclo de prácticas del alumno. */
 export type PracticaEstado = "EN_CURSO" | "LISTA_PARA_CIERRE" | "CERRADA";
 
+/** Estado de validación de un registro de horas por el supervisor externo (HU-24). */
+export type RegistroHorasEstado = "PENDIENTE" | "VALIDADO" | "RECHAZADO";
+
 /** Registro individual de horas trabajadas (bitácora). */
 export interface RegistroHoras {
   id: string;
@@ -128,6 +133,7 @@ export interface RegistroHoras {
   fecha: string;
   horas: number;
   descripcion: string;
+  estadoValidacion: RegistroHorasEstado;
 }
 
 /**
@@ -225,4 +231,35 @@ export interface CreateMetaPayload {
 
 export interface RegistrarAvanceMetaPayload {
   cantidad: number;
+}
+
+/* ============================================================
+ * HU-22 · Panel de control del profesor (asistencia de soporte)
+ * ============================================================ */
+
+/** Registro de asistencia diaria de un practicante a su aula/práctica. */
+export interface RegistroAsistencia {
+  id: string;
+  practicanteId: string;
+  aulaId: string;
+  fecha: string;
+  presente: boolean;
+}
+
+/* ============================================================
+ * HU-24 · Panel de control de empresa (supervisor externo)
+ * ============================================================ */
+
+/** Estado de la evaluación de desempeño de un practicante por su supervisor externo. */
+export type EvaluacionEstado = "PENDIENTE" | "COMPLETADA";
+
+export interface Evaluacion {
+  id: string;
+  practicaId: string;
+  practicanteId: string;
+  practicanteNombre: string;
+  empresaId: string;
+  periodo: string;
+  estado: EvaluacionEstado;
+  fechaLimite: string;
 }

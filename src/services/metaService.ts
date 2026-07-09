@@ -41,7 +41,10 @@ export const metaService = {
     if (user.role === "PROFESOR") {
       return delay(db.getMetasByDocente(user.id).map(resolverAvance));
     }
-    return delay(db.getMetas().map(resolverAvance));
+    if (user.role === "ADMIN") {
+      return delay(db.getMetas().map(resolverAvance));
+    }
+    return delay([]);
   },
 
   /** Metas de un practicante específico (para la vista de gestión). */

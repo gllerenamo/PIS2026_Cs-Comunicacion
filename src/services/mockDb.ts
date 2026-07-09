@@ -1,9 +1,11 @@
 import type {
   Aula,
   Empresa,
+  Evaluacion,
   Meta,
   Notificacion,
   Practica,
+  RegistroAsistencia,
   RegistroHoras,
   Supervisor,
   Tarea,
@@ -28,6 +30,8 @@ const HORAS_KEY = "ssp.horas";
 const TAREAS_KEY = "ssp.tareas";
 const NOTIFICACIONES_KEY = "ssp.notificaciones";
 const METAS_KEY = "ssp.metas";
+const ASISTENCIAS_KEY = "ssp.asistencias";
+const EVALUACIONES_KEY = "ssp.evaluaciones";
 
 /** Cuentas semilla para poder iniciar sesión sin registrar. */
 const SEED_USERS: StoredUser[] = [
@@ -54,6 +58,14 @@ const SEED_USERS: StoredUser[] = [
     email: "alumno@unsa.edu.pe",
     role: "ALUMNO",
     password: "alumno123",
+  },
+  {
+    id: "u-supervisor",
+    nombres: "Marisol",
+    apellidos: "Chávez",
+    email: "supervisor@radioyaravi.pe",
+    role: "SUPERVISOR",
+    password: "supervisor123",
   },
 ];
 
@@ -106,6 +118,7 @@ const SEED_SUPERVISORES: Supervisor[] = [
   {
     id: "s-1",
     empresaId: "e-1",
+    userId: "u-supervisor",
     nombres: "Marisol",
     apellidos: "Chávez",
     cargo: "Jefa de Prensa",
@@ -152,6 +165,7 @@ const SEED_HORAS: RegistroHoras[] = [
     fecha: new Date("2026-05-02").toISOString(),
     horas: 40,
     descripcion: "Producción de notas informativas semanales.",
+    estadoValidacion: "VALIDADO",
   },
   {
     id: "h-2",
@@ -159,6 +173,7 @@ const SEED_HORAS: RegistroHoras[] = [
     fecha: new Date("2026-06-01").toISOString(),
     horas: 60,
     descripcion: "Edición de contenidos para redes sociales.",
+    estadoValidacion: "VALIDADO",
   },
   {
     id: "h-3",
@@ -166,6 +181,7 @@ const SEED_HORAS: RegistroHoras[] = [
     fecha: new Date("2026-06-25").toISOString(),
     horas: 48,
     descripcion: "Cobertura de eventos institucionales.",
+    estadoValidacion: "PENDIENTE",
   },
 ];
 
@@ -186,6 +202,15 @@ const SEED_TAREAS: Tarea[] = [
     titulo: "Registrar horas de la última quincena",
     descripcion: "Actualizar la bitácora de horas acumuladas.",
     fechaVencimiento: new Date(Date.now() + 7 * 86400000).toISOString(),
+    completada: false,
+  },
+  {
+    id: "t-3",
+    aulaId: "a-1",
+    practicanteId: "u-alumno",
+    titulo: "Entrega de evidencias de cobertura",
+    descripcion: "Adjuntar capturas y enlaces de las notas publicadas.",
+    fechaVencimiento: new Date(Date.now() - 5 * 86400000).toISOString(),
     completada: false,
   },
 ];
@@ -235,6 +260,60 @@ const SEED_METAS: Meta[] = [
     descripcion: "Cumplimiento del mínimo reglamentario de horas.",
     creadoPor: "Jose Luis Cuenca",
     fechaCreacion: new Date("2026-04-05").toISOString(),
+  },
+];
+
+const SEED_ASISTENCIAS: RegistroAsistencia[] = [
+  {
+    id: "as-1",
+    practicanteId: "u-alumno",
+    aulaId: "a-1",
+    fecha: new Date(Date.now() - 28 * 86400000).toISOString(),
+    presente: true,
+  },
+  {
+    id: "as-2",
+    practicanteId: "u-alumno",
+    aulaId: "a-1",
+    fecha: new Date(Date.now() - 21 * 86400000).toISOString(),
+    presente: true,
+  },
+  {
+    id: "as-3",
+    practicanteId: "u-alumno",
+    aulaId: "a-1",
+    fecha: new Date(Date.now() - 14 * 86400000).toISOString(),
+    presente: false,
+  },
+  {
+    id: "as-4",
+    practicanteId: "u-alumno",
+    aulaId: "a-1",
+    fecha: new Date(Date.now() - 7 * 86400000).toISOString(),
+    presente: true,
+  },
+];
+
+const SEED_EVALUACIONES: Evaluacion[] = [
+  {
+    id: "ev-1",
+    practicaId: "pr-1",
+    practicanteId: "u-alumno",
+    practicanteNombre: "Piero Mejía",
+    empresaId: "e-1",
+    periodo: "2026-I",
+    estado: "PENDIENTE",
+    fechaLimite: new Date(Date.now() + 10 * 86400000).toISOString(),
+  },
+  {
+    id: "ev-0",
+    practicaId: "pr-0",
+    practicanteId: "u-alumno",
+    practicanteNombre: "Piero Mejía",
+    empresaId: "e-1",
+    periodo: "2025-II",
+    estado: "COMPLETADA",
+    fechaLimite: new Date("2025-12-15").toISOString(),
   },
 ];
 
@@ -319,6 +398,13 @@ export const db = {
     supervisores.unshift(supervisor);
     write(SUPERVISORES_KEY, supervisores);
   },
+  /** Empresas/centros de prácticas a cargo de un supervisor externo (HU-24). */
+  getEmpresasBySupervisor(userId: string): Empresa[] {
+    const empresaIds = this.getSupervisores()
+      .filter((s) => s.userId === userId)
+      .map((s) => s.empresaId);
+    return this.getEmpresas().filter((e) => empresaIds.includes(e.id));
+  },
 
   /* ----- Prácticas: horas, cierre, historial (HU-14/15/18) ----- */
   getPracticas(): Practica[] {
@@ -333,6 +419,12 @@ export const db = {
   getPracticasByDocente(profesorId: string): Practica[] {
     const aulaIds = this.getAulasByProfesor(profesorId).map((a) => a.id);
     return this.getPracticas().filter((p) => aulaIds.includes(p.aulaId));
+  },
+  /** Prácticas de los practicantes asignados a un centro de prácticas (HU-24). */
+  getPracticasByEmpresas(empresaIds: string[]): Practica[] {
+    return this.getPracticas().filter(
+      (p) => p.empresaId && empresaIds.includes(p.empresaId),
+    );
   },
   updatePractica(practica: Practica): void {
     const practicas = this.getPracticas().map((p) =>
@@ -351,6 +443,11 @@ export const db = {
     const registros = read(HORAS_KEY, SEED_HORAS);
     registros.unshift(registro);
     write(HORAS_KEY, registros);
+  },
+  /** Registros de horas de los practicantes de un centro de prácticas (HU-24). */
+  getRegistrosHorasPorEmpresas(empresaIds: string[]): RegistroHoras[] {
+    const practicaIds = this.getPracticasByEmpresas(empresaIds).map((p) => p.id);
+    return read(HORAS_KEY, SEED_HORAS).filter((h) => practicaIds.includes(h.practicaId));
   },
 
   /* ----- Metas (HU-20) ----- */
@@ -377,12 +474,34 @@ export const db = {
     write(METAS_KEY, metas);
   },
 
+  /* ----- Asistencia (HU-22) ----- */
+  getAsistencias(): RegistroAsistencia[] {
+    return read(ASISTENCIAS_KEY, SEED_ASISTENCIAS);
+  },
+  getAsistenciasByDocente(profesorId: string): RegistroAsistencia[] {
+    const aulaIds = this.getAulasByProfesor(profesorId).map((a) => a.id);
+    return this.getAsistencias().filter((a) => aulaIds.includes(a.aulaId));
+  },
+
+  /* ----- Evaluaciones (HU-24) ----- */
+  getEvaluaciones(): Evaluacion[] {
+    return read(EVALUACIONES_KEY, SEED_EVALUACIONES);
+  },
+  getEvaluacionesByEmpresas(empresaIds: string[]): Evaluacion[] {
+    return this.getEvaluaciones().filter((e) => empresaIds.includes(e.empresaId));
+  },
+
   /* ----- Tareas (HU-17) ----- */
   getTareas(): Tarea[] {
     return read(TAREAS_KEY, SEED_TAREAS);
   },
   getTareasByPracticante(practicanteId: string): Tarea[] {
     return this.getTareas().filter((t) => t.practicanteId === practicanteId);
+  },
+  /** Tareas asignadas en las aulas de un profesor (HU-22, "entregas pendientes"). */
+  getTareasByDocente(profesorId: string): Tarea[] {
+    const aulaIds = this.getAulasByProfesor(profesorId).map((a) => a.id);
+    return this.getTareas().filter((t) => aulaIds.includes(t.aulaId));
   },
   addTarea(tarea: Tarea): void {
     const tareas = this.getTareas();

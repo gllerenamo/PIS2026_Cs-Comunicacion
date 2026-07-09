@@ -4,11 +4,17 @@
    =========================================================================== */
 
 :root {
-  /* Paleta institucional (azul académico) */
-  --color-primary: #1d4ed8;
-  --color-primary-hover: #1e40af;
-  --color-primary-soft: #eff4ff;
+  /* Paleta institucional (granate) */
+  --color-primary: #6b1a2e;
+  --color-primary-hover: #551422;
+  --color-primary-soft: #f7e9ec;
   --color-primary-contrast: #ffffff;
+
+  /* Tonos para elementos ubicados sobre un fondo --color-primary (topbar) */
+  --color-on-primary: #ffffff;
+  --color-on-primary-muted: rgba(255, 255, 255, 0.75);
+  --color-on-primary-soft: rgba(255, 255, 255, 0.16);
+  --color-on-primary-border: rgba(255, 255, 255, 0.35);
 
   --color-accent: #0ea5e9;
 

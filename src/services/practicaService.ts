@@ -21,7 +21,10 @@ export const practicaService = {
     if (user.role === "PROFESOR") {
       return delay(db.getPracticasByDocente(user.id));
     }
-    return delay(db.getPracticas());
+    if (user.role === "ADMIN") {
+      return delay(db.getPracticas());
+    }
+    return delay([]);
   },
 
   /** Práctica activa (o más reciente) del practicante autenticado. */
@@ -56,6 +59,7 @@ export const practicaService = {
       fecha: payload.fecha ?? new Date().toISOString(),
       horas: payload.horas,
       descripcion: payload.descripcion.trim(),
+      estadoValidacion: "PENDIENTE",
     };
     db.addRegistroHoras(registro);
 
