@@ -221,3 +221,145 @@ class ArchivoOut(BaseModel):
     tipoMime: str
     tamanio: int
     createdAt: str
+
+
+# ── Empresa / centro de prácticas (HU-13) ─────────────────────────────────────
+
+PracticaEstado = Literal["EN_CURSO", "LISTA_PARA_CIERRE", "CERRADA"]
+NotificacionTipo = Literal["TAREA_ASIGNADA", "VENCIMIENTO"]
+
+
+class EmpresaOut(BaseModel):
+    """Idéntico a la interfaz Empresa del frontend."""
+
+    id: str
+    practicanteId: str
+    razonSocial: str
+    ruc: str
+    direccion: str
+    sector: str
+    telefono: str
+    email: str
+    fechaRegistro: str
+
+
+class CreateEmpresaRequest(BaseModel):
+    """Idéntico a CreateEmpresaPayload del frontend."""
+
+    razonSocial: str
+    ruc: str
+    direccion: str
+    sector: str
+    telefono: str
+    email: EmailStr
+
+    @field_validator(
+        "razonSocial", "ruc", "direccion", "sector", "telefono", mode="before"
+    )
+    @classmethod
+    def strip_strings(cls, v: str) -> str:
+        return v.strip()
+
+
+# ── Supervisor externo (HU-19) ────────────────────────────────────────────────
+
+
+class SupervisorOut(BaseModel):
+    """Idéntico a la interfaz Supervisor del frontend."""
+
+    id: str
+    empresaId: str
+    nombres: str
+    apellidos: str
+    cargo: str
+    email: str
+    telefono: str
+
+
+class CreateSupervisorRequest(BaseModel):
+    """Idéntico a CreateSupervisorPayload del frontend."""
+
+    nombres: str
+    apellidos: str
+    cargo: str
+    email: EmailStr
+    telefono: str
+
+    @field_validator("nombres", "apellidos", "cargo", "telefono", mode="before")
+    @classmethod
+    def strip_strings(cls, v: str) -> str:
+        return v.strip()
+
+
+# ── Prácticas: horas, cierre, historial (HU-14/15/18) ─────────────────────────
+
+
+class PracticaOut(BaseModel):
+    """Idéntico a la interfaz Practica del frontend."""
+
+    id: str
+    practicanteId: str
+    practicanteNombre: str
+    aulaId: str
+    aulaNombre: str
+    periodo: str
+    empresaId: Optional[str] = None
+    horasAcumuladas: int
+    horasMinimas: int
+    estado: PracticaEstado
+    fechaInicio: str
+    fechaCierre: Optional[str] = None
+    validadoPor: Optional[str] = None
+
+
+class RegistroHorasOut(BaseModel):
+    """Idéntico a la interfaz RegistroHoras del frontend."""
+
+    id: str
+    practicaId: str
+    fecha: str
+    horas: int
+    descripcion: str
+
+
+class RegistrarHorasRequest(BaseModel):
+    """Idéntico a RegistrarHorasPayload del frontend."""
+
+    horas: int
+    descripcion: str
+    fecha: Optional[str] = None
+
+
+class RegistrarHorasResponse(BaseModel):
+    """Respuesta de registrar horas: práctica actualizada + registro creado."""
+
+    practica: PracticaOut
+    registro: RegistroHorasOut
+
+
+# ── Reporte final (HU-16) ─────────────────────────────────────────────────────
+
+
+class ReporteFinalOut(BaseModel):
+    """Idéntico a la interfaz ReporteFinal del frontend."""
+
+    id: str
+    practicaId: str
+    generadoPor: str
+    generadoEn: str
+    contenido: str
+
+
+# ── Notificaciones (HU-17) ────────────────────────────────────────────────────
+
+
+class NotificacionOut(BaseModel):
+    """Idéntico a la interfaz Notificacion del frontend."""
+
+    id: str
+    userId: str
+    tipo: NotificacionTipo
+    titulo: str
+    mensaje: str
+    leida: bool
+    fecha: str

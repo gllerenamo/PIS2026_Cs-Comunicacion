@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import type { Role } from "../../types";
+import { NotificationBell } from "./NotificationBell";
 import { useAuth } from "../../hooks/useAuth";
 import "./AppLayout.css";
 
@@ -28,6 +29,9 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
     {
       title: "Mi práctica",
       items: [
+        { to: "/empresa", label: "Mi empresa", enabled: true },
+        { to: "/horas", label: "Horas acumuladas", enabled: true },
+        { to: "/reporte", label: "Reporte final", enabled: true },
         { to: "/bitacora", label: "Mi bitácora" },
         { to: "/calificaciones", label: "Calificaciones" },
       ],
@@ -53,6 +57,14 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
         { to: "/progreso", label: "Progreso practicantes", enabled: true },
       ],
     },
+    {
+      title: "Seguimiento",
+      items: [
+        { to: "/cierre", label: "Cierre y validación", enabled: true },
+        { to: "/historial", label: "Historial de practicantes", enabled: true },
+        { to: "/reporte", label: "Reporte final", enabled: true },
+      ],
+    },
   ],
   ADMIN: [
     {
@@ -62,6 +74,14 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
         { to: "/aulas", label: "Clases y prácticas", enabled: true },
         { to: "/progreso", label: "Progreso practicantes", enabled: true },
         { to: "/usuarios", label: "Gestión de usuarios", enabled: true },
+      ],
+    },
+    {
+      title: "Seguimiento",
+      items: [
+        { to: "/cierre", label: "Cierre y validación", enabled: true },
+        { to: "/historial", label: "Historial de practicantes", enabled: true },
+        { to: "/reporte", label: "Reporte final", enabled: true },
       ],
     },
   ],
@@ -91,6 +111,7 @@ export function AppLayout() {
           <span className="shell__brand-sub">Ciencias de la Comunicación</span>
         </div>
         <div className="shell__user">
+          <NotificationBell />
           <span className="shell__user-name">
             {user.nombres} {user.apellidos}
           </span>

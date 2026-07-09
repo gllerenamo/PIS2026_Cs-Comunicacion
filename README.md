@@ -29,12 +29,19 @@ Según `SSP_ARQ_ArquitecturaDelSistema_V1.0`:
 
 ## Historias de usuario implementadas
 
-| HU   | Descripción                  | Ruta         |
-| ---- | ---------------------------- | ------------ |
-| HU-1 | Iniciar sesión               | `/login`     |
-| HU-2 | Recuperar contraseña         | `/recuperar` |
-| HU-3 | Registrar nuevas cuentas     | `/registro`  |
-| HU-4 | Creación de clases/prácticas | `/aulas`     |
+| HU    | Descripción                               | Ruta                  |
+| ----- | ------------------------------------------ | ---------------------- |
+| HU-1  | Iniciar sesión                             | `/login`               |
+| HU-2  | Recuperar contraseña                       | `/recuperar`           |
+| HU-3  | Registrar nuevas cuentas                   | `/registro`            |
+| HU-4  | Creación de clases/prácticas               | `/aulas`               |
+| HU-13 | Registro de empresa / centro de prácticas  | `/empresa`             |
+| HU-14 | Seguimiento de horas acumuladas            | `/horas`               |
+| HU-15 | Cierre y validación de prácticas           | `/cierre`              |
+| HU-16 | Generación de reporte final de prácticas   | `/reporte`             |
+| HU-17 | Notificaciones de tareas y vencimientos    | campana en el topbar   |
+| HU-18 | Historial de prácticas por practicante     | `/historial`           |
+| HU-19 | Gestión del supervisor externo             | `/empresa`             |
 
 ## Cuentas de prueba
 
@@ -59,14 +66,20 @@ npm run preview  # previsualizar el build
 src/
   components/      Componentes de UI reutilizables y layouts
     ui/            Button, TextField, SelectField, Alert, Modal
-    layout/        AuthLayout (auth), AppLayout (shell autenticado)
+    layout/        AuthLayout (auth), AppLayout (shell autenticado), NotificationBell (HU-17)
   context/         AuthProvider + contexto de autenticación
   hooks/           useAuth
   pages/
     auth/          LoginPage, ForgotPasswordPage, RegisterPage  (HU-1/2/3)
     aulas/         AulasPage                                     (HU-4)
+    empresa/       EmpresaPage                                   (HU-13, HU-19)
+    horas/         HorasPage                                     (HU-14)
+    cierre/        CierrePage                                    (HU-15)
+    reporte/       ReportePage                                   (HU-16)
+    historial/     HistorialPage                                 (HU-18)
     DashboardPage
-  services/        Capa mock de la API (auth, aulas) + "BD" local
+  services/        Capa mock de la API (auth, aulas, empresa, práctica,
+                    reporte, notificación) + "BD" local
   types/           Tipos del dominio (contratos de la API)
   utils/           Validadores de formularios
 ```
