@@ -4,13 +4,13 @@
    =========================================================================== */
 
 :root {
-  /* Paleta institucional (azul académico) */
-  --color-primary: #1d4ed8;
-  --color-primary-hover: #1e40af;
-  --color-primary-soft: #eff4ff;
+  /* Paleta institucional (guinda / granate — Ciencias de la Comunicación) */
+  --color-primary: #7a1f2b;
+  --color-primary-hover: #641722;
+  --color-primary-soft: #f7ecee;
   --color-primary-contrast: #ffffff;
 
-  --color-accent: #0ea5e9;
+  --color-accent: #b08d57;
 
   /* Estados */
   --color-success: #16a34a;
@@ -30,6 +30,7 @@
 
   /* Tipografía */
   --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: Georgia, "Times New Roman", "Cambria", serif;
 
   /* Radios y sombras */
   --radius-sm: 6px;

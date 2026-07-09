@@ -1,0 +1,221 @@
+.bita__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.bita__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.bita__new-btn {
+  padding: 7px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.bita__new-btn:hover {
+  background: var(--color-primary-hover);
+}
+
+.bita__muted {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.bita__error {
+  font-size: 13px;
+  color: var(--color-danger);
+  margin-bottom: 10px;
+}
+
+/* Formulario nuevo registro */
+.bita__form {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 18px;
+}
+
+.bita__form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.bita__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.bita__field--horas {
+  max-width: 110px;
+}
+
+.bita__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.bita__input {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.bita__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.bita__form-actions {
+  margin-top: 12px;
+}
+
+.bita__save-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.bita__save-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Grupos por mes */
+.bita__group {
+  margin-bottom: 18px;
+}
+
+.bita__group-title {
+  font-size: 12px;
+  color: var(--color-text-soft);
+  letter-spacing: 0.3px;
+  margin-bottom: 10px;
+}
+
+/* Ítem de registro */
+.bita-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+}
+
+.bita-item__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 42px;
+  flex-shrink: 0;
+}
+
+.bita-item__day {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.bita-item__month {
+  font-size: 10px;
+  color: var(--color-text-soft);
+  text-transform: lowercase;
+}
+
+.bita-item__sep {
+  width: 1px;
+  align-self: stretch;
+  background: var(--color-border);
+  margin: 2px 2px;
+}
+
+.bita-item__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bita-item__act {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.bita-item__sub {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.bita-item__hours {
+  flex-shrink: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Total acumulado */
+.bita__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-top: 12px;
+}
+
+.bita__total-label {
+  font-size: 13px;
+  color: var(--color-primary-dark, var(--color-primary));
+}
+
+.bita__total-value {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--color-primary);
+}
+
+.bita__total-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-border);
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.bita__total-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}

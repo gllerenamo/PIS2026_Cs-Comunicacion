@@ -22,5 +22,24 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.pyc
 
 .claude
+
+# Backend env / venv
+ssp-backend/ssp-backend/.env
+ssp-backend/ssp-backend/venv/
+
+# Documentos de referencia (no forman parte del código fuente)
+*.pdf.md
+Mockups - Interfaz Alumno.md
+
+# Backend (Python) — entorno y secretos locales
+ssp-backend/**/venv/
+ssp-backend/**/.env
+ssp-backend/**/*.db
+ssp-backend/**/__pycache__/
+
+# Archivos subidos al backend (solo se versionea el placeholder)
+ssp-backend/**/uploads/*
+!ssp-backend/**/uploads/.gitkeep

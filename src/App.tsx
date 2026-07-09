@@ -7,6 +7,17 @@ import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AulasPage } from "./pages/aulas/AulasPage";
+import { MisAulasPage } from "./pages/alumno/MisAulasPage";
+import { AulaVirtualPage } from "./pages/alumno/AulaVirtualPage";
+import { BitacoraPage } from "./pages/alumno/BitacoraPage";
+import { ProgresoPage } from "./pages/profesor/ProgresoPage";
+import { UsuariosPage } from "./pages/admin/UsuariosPage";
+import { EmpresaPage } from "./pages/empresa/EmpresaPage";
+import { HorasPage } from "./pages/horas/HorasPage";
+import { CierrePage } from "./pages/cierre/CierrePage";
+import { ReportePage } from "./pages/reporte/ReportePage";
+import { HistorialPage } from "./pages/historial/HistorialPage";
+import { MetasPage } from "./pages/metas/MetasPage";
 
 export default function App() {
   return (
@@ -21,7 +32,18 @@ export default function App() {
           {/* Rutas protegidas (requieren sesión) */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
+              {/* HU-22/23/24: el panel se adapta al rol (profesor/admin/supervisor/alumno) */}
               <Route path="/dashboard" element={<DashboardPage />} />
+            </Route>
+          </Route>
+
+          {/* Compartidas entre alumno, profesor y admin — el supervisor externo no accede aquí */}
+          <Route element={<ProtectedRoute roles={["ADMIN", "PROFESOR", "ALUMNO"]} />}>
+            <Route element={<AppLayout />}>
+              {/* HU-16: reporte final */}
+              <Route path="/reporte" element={<ReportePage />} />
+              {/* HU-20: metas por practicante */}
+              <Route path="/metas" element={<MetasPage />} />
             </Route>
           </Route>
 
@@ -29,6 +51,43 @@ export default function App() {
           <Route element={<ProtectedRoute roles={["ADMIN", "PROFESOR"]} />}>
             <Route element={<AppLayout />}>
               <Route path="/aulas" element={<AulasPage />} />
+              {/* HU-15: cierre y validación de prácticas */}
+              <Route path="/cierre" element={<CierrePage />} />
+              {/* HU-18: historial de prácticas por practicante */}
+              <Route path="/historial" element={<HistorialPage />} />
+            </Route>
+          </Route>
+
+          {/* Gestión propia del practicante: solo Alumno (RBAC) */}
+          <Route element={<ProtectedRoute roles={["ALUMNO"]} />}>
+            <Route element={<AppLayout />}>
+              {/* HU-13 + HU-19: empresa y supervisor externo */}
+              <Route path="/empresa" element={<EmpresaPage />} />
+              {/* HU-14: seguimiento de horas acumuladas */}
+              <Route path="/horas" element={<HorasPage />} />
+            </Route>
+          </Route>
+
+          {/* Vista del alumno: clases programadas (HU-05) y aula virtual (HU-06) */}
+          <Route element={<ProtectedRoute roles={["ALUMNO"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/mis-aulas" element={<MisAulasPage />} />
+              <Route path="/mis-aulas/:id" element={<AulaVirtualPage />} />
+              <Route path="/bitacora" element={<BitacoraPage />} />
+            </Route>
+          </Route>
+
+          {/* Progreso practicantes (HU-11): Profesor y Admin */}
+          <Route element={<ProtectedRoute roles={["ADMIN", "PROFESOR"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/progreso" element={<ProgresoPage />} />
+            </Route>
+          </Route>
+
+          {/* Gestión de usuarios (HU-12): solo Admin */}
+          <Route element={<ProtectedRoute roles={["ADMIN"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/usuarios" element={<UsuariosPage />} />
             </Route>
           </Route>
 

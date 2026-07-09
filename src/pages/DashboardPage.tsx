@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { ProfesorPanel } from "./dashboard/ProfesorPanel";
+import { AdminPanel } from "./dashboard/AdminPanel";
+import { EmpresaPanel } from "./dashboard/EmpresaPanel";
 import "./DashboardPage.css";
 
-/** Panel de inicio tras autenticarse. El contenido se adapta al rol. */
+/** Panel de inicio tras autenticarse. El contenido se adapta al rol (HU-22/23/24). */
 export function DashboardPage() {
   const { user } = useAuth();
   if (!user) return null;
 
-  const canManageAulas = user.role === "ADMIN" || user.role === "PROFESOR";
+  if (user.role === "PROFESOR") return <ProfesorPanel user={user} />;
+  if (user.role === "ADMIN") return <AdminPanel user={user} />;
+  if (user.role === "SUPERVISOR") return <EmpresaPanel user={user} />;
 
   return (
     <div className="dash">
@@ -19,18 +23,6 @@ export function DashboardPage() {
       </header>
 
       <section className="dash__cards">
-        {canManageAulas && (
-          <article className="dash-card">
-            <h3 className="dash-card__title">Clases y prácticas</h3>
-            <p className="dash-card__text">
-              Crea y administra las aulas de prácticas pre-profesionales.
-            </p>
-            <Link to="/aulas" className="dash-card__action">
-              Gestionar clases →
-            </Link>
-          </article>
-        )}
-
         <article className="dash-card">
           <h3 className="dash-card__title">Asistencia</h3>
           <p className="dash-card__text">
