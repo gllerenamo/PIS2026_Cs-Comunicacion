@@ -1,0 +1,261 @@
+/* Estilos compartidos de las vistas de docencia del profesor (HU-25 a HU-28). */
+
+.doc {
+  max-width: 1100px;
+}
+
+.doc__breadcrumb {
+  font-size: 11.5px;
+  color: var(--color-text-soft);
+  margin-bottom: 12px;
+}
+
+.doc__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.doc__title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--color-text);
+  font-weight: normal;
+}
+
+.doc__subtitle {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.doc__toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.doc-select,
+.doc-date {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.doc-select:focus,
+.doc-date:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.doc-muted {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.doc-error {
+  font-size: 13px;
+  color: var(--color-danger);
+  margin-bottom: 10px;
+}
+
+.doc-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.doc-btn:hover { background: var(--color-primary-hover); }
+.doc-btn:disabled { opacity: 0.6; cursor: default; }
+
+.doc-btn--ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+.doc-btn--ghost:hover { background: var(--color-primary-soft); }
+
+/* ── Chips de estado ─────────────────────────────────────────────────── */
+.doc-chip {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 10px;
+}
+.doc-chip--ok { background: #eaf3de; color: #27500a; }
+.doc-chip--warn { background: #faeeda; color: #633806; }
+.doc-chip--bad { background: #fcebeb; color: #791f1f; }
+
+/* ── Tabla genérica ──────────────────────────────────────────────────── */
+.doc-tablewrap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.doc-table th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  white-space: nowrap;
+}
+.doc-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+.doc-table tr:last-child td { border-bottom: none; }
+.doc-table__num { text-align: center; }
+.doc-table__avg {
+  text-align: right;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--color-primary);
+}
+
+/* ── Lista de asistencia ─────────────────────────────────────────────── */
+.doc-att {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+}
+.doc-att__name { flex: 1; font-size: 13.5px; color: var(--color-text); }
+.doc-att__toggle {
+  display: flex;
+  gap: 6px;
+}
+.doc-att__btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.doc-att__btn.is-on-p { background: #eaf3de; border-color: #7fad52; color: #27500a; }
+.doc-att__btn.is-on-a { background: #fcebeb; border-color: #c97070; color: #791f1f; }
+
+/* ── Cards de entrega ────────────────────────────────────────────────── */
+.doc-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.doc-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.doc-card__title { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.doc-card__meta { font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
+.doc-card__body { font-size: 13px; color: var(--color-text); margin-top: 8px; line-height: 1.5; }
+
+.doc-grade {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.doc-grade__nota {
+  width: 78px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  text-align: center;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+.doc-grade__retro {
+  flex: 1;
+  min-width: 200px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  resize: vertical;
+  min-height: 40px;
+}
+
+/* ── Ficha de seguimiento ────────────────────────────────────────────── */
+.doc-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.doc-kpi {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+.doc-kpi__lbl {
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+  margin-bottom: 6px;
+}
+.doc-kpi__val {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--color-text);
+}
+.doc-riesgo {
+  background: #fcebeb;
+  border-left: 3px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: #791f1f;
+  margin-bottom: 16px;
+}
+.doc-list {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr);
+  gap: 12px;
+}

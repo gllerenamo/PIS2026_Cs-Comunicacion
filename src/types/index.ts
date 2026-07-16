@@ -404,3 +404,94 @@ export interface ResumenEmpresa {
   evaluacionesPendientes: number;
   cumplimientoPromedio: number | null;
 }
+
+/* ============================================================
+ * HU-25 · Registro de asistencia (profesor)
+ * ============================================================ */
+
+export interface AsistenciaItem {
+  practicanteId: string;
+  practicanteNombre: string;
+  presente: boolean;
+}
+
+export interface AsistenciaSesion {
+  aulaId: string;
+  fecha: string;
+  items: AsistenciaItem[];
+}
+
+/* ============================================================
+ * HU-26 · Revisar y calificar entregas (profesor)
+ * ============================================================ */
+
+export interface EntregaProfesor {
+  id: string;
+  tareaId: string;
+  tareaTitulo: string;
+  alumnoId: string;
+  alumnoNombre: string;
+  descripcion: string;
+  comentario: string;
+  archivoId: string | null;
+  estado: string;
+  nota: number | null;
+  retroalimentacion: string | null;
+  createdAt: string;
+}
+
+/* ============================================================
+ * HU-27 · Libro de calificaciones (profesor)
+ * ============================================================ */
+
+export interface LibroTarea {
+  id: string;
+  titulo: string;
+}
+
+export interface LibroAlumno {
+  alumnoId: string;
+  alumnoNombre: string;
+  codigo: string;
+  /** nota por tareaId (null si no calificada). */
+  notas: Record<string, number | null>;
+  promedio: number | null;
+  asistenciaPct: number | null;
+  horas: number;
+}
+
+export interface LibroCalificaciones {
+  aulaId: string;
+  aulaNombre: string;
+  tareas: LibroTarea[];
+  alumnos: LibroAlumno[];
+  promedioGeneral: number | null;
+}
+
+/* ============================================================
+ * HU-28 · Seguimiento individual del practicante (profesor)
+ * ============================================================ */
+
+export interface SeguimientoEntrega {
+  tareaTitulo: string;
+  nota: number | null;
+  estado: string;
+  retroalimentacion: string | null;
+}
+
+export interface Seguimiento {
+  practicanteId: string;
+  practicanteNombre: string;
+  practicanteEmail: string;
+  aulaId: string;
+  aulaNombre: string;
+  empresaNombre: string | null;
+  promedio: number | null;
+  asistenciaPct: number | null;
+  horasAcumuladas: number;
+  horasMinimas: number;
+  progreso: number;
+  estadoPractica: string | null;
+  entregas: SeguimientoEntrega[];
+  motivosRiesgo: string[];
+}

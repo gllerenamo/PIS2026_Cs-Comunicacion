@@ -11,6 +11,10 @@ import { MisAulasPage } from "./pages/alumno/MisAulasPage";
 import { AulaVirtualPage } from "./pages/alumno/AulaVirtualPage";
 import { BitacoraPage } from "./pages/alumno/BitacoraPage";
 import { ProgresoPage } from "./pages/profesor/ProgresoPage";
+import { AsistenciaPage } from "./pages/profesor/AsistenciaPage";
+import { RevisarPage } from "./pages/profesor/RevisarPage";
+import { LibroPage } from "./pages/profesor/LibroPage";
+import { SeguimientoPage } from "./pages/profesor/SeguimientoPage";
 import { UsuariosPage } from "./pages/admin/UsuariosPage";
 import { EmpresaPage } from "./pages/empresa/EmpresaPage";
 import { HorasPage } from "./pages/horas/HorasPage";
@@ -55,6 +59,14 @@ export default function App() {
               <Route path="/cierre" element={<CierrePage />} />
               {/* HU-18: historial de prácticas por practicante */}
               <Route path="/historial" element={<HistorialPage />} />
+              {/* HU-25: registro de asistencia */}
+              <Route path="/asistencia" element={<AsistenciaPage />} />
+              {/* HU-26: revisar y calificar entregas */}
+              <Route path="/revisar" element={<RevisarPage />} />
+              {/* HU-27: libro de calificaciones */}
+              <Route path="/libro" element={<LibroPage />} />
+              {/* HU-28: seguimiento individual del practicante */}
+              <Route path="/seguimiento" element={<SeguimientoPage />} />
             </Route>
           </Route>
 

@@ -58,8 +58,17 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
       ],
     },
     {
+      title: "Docencia",
+      items: [
+        { to: "/asistencia", label: "Asistencia", enabled: true },
+        { to: "/revisar", label: "Revisar entregas", enabled: true },
+        { to: "/libro", label: "Calificaciones", enabled: true },
+      ],
+    },
+    {
       title: "Seguimiento",
       items: [
+        { to: "/seguimiento", label: "Seguimiento practicantes", enabled: true },
         { to: "/cierre", label: "Cierre y validación", enabled: true },
         { to: "/historial", label: "Historial de practicantes", enabled: true },
         { to: "/metas", label: "Metas por practicante", enabled: true },
@@ -80,6 +89,7 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
     {
       title: "Seguimiento",
       items: [
+        { to: "/seguimiento", label: "Seguimiento practicantes", enabled: true },
         { to: "/cierre", label: "Cierre y validación", enabled: true },
         { to: "/historial", label: "Historial de practicantes", enabled: true },
         { to: "/metas", label: "Metas por practicante", enabled: true },

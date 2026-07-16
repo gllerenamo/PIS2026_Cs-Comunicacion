@@ -463,3 +463,115 @@ class ResumenEmpresaOut(BaseModel):
     horasPorValidar: int
     evaluacionesPendientes: int
     cumplimientoPromedio: Optional[int] = None
+
+
+# ── Docencia del profesor: asistencia (HU-25) ─────────────────────────────────
+
+
+class AsistenciaItemOut(BaseModel):
+    practicanteId: str
+    practicanteNombre: str
+    presente: bool
+
+
+class AsistenciaSesionOut(BaseModel):
+    """Estado de asistencia de un aula en una fecha concreta."""
+
+    aulaId: str
+    fecha: str
+    items: list[AsistenciaItemOut]
+
+
+class AsistenciaItemIn(BaseModel):
+    practicanteId: str
+    presente: bool
+
+
+class GuardarAsistenciaRequest(BaseModel):
+    fecha: str  # ISO date (YYYY-MM-DD)
+    items: list[AsistenciaItemIn]
+
+
+# ── Docencia del profesor: revisar y calificar entregas (HU-26) ───────────────
+
+
+class EntregaProfesorOut(BaseModel):
+    """Entrega vista por el profesor, con datos del alumno y la tarea."""
+
+    id: str
+    tareaId: str
+    tareaTitulo: str
+    alumnoId: str
+    alumnoNombre: str
+    descripcion: str
+    comentario: str
+    archivoId: Optional[str]
+    estado: str
+    nota: Optional[int]
+    retroalimentacion: Optional[str]
+    createdAt: str
+
+
+class CalificarEntregaRequest(BaseModel):
+    nota: int
+    retroalimentacion: str = ""
+
+    @field_validator("nota")
+    @classmethod
+    def nota_en_rango(cls, v: int) -> int:
+        if v < 0 or v > 20:
+            raise ValueError("La nota debe estar entre 0 y 20.")
+        return v
+
+
+# ── Docencia del profesor: libro de calificaciones (HU-27) ────────────────────
+
+
+class LibroTareaOut(BaseModel):
+    id: str
+    titulo: str
+
+
+class LibroAlumnoOut(BaseModel):
+    alumnoId: str
+    alumnoNombre: str
+    codigo: str
+    notas: dict[str, Optional[int]]  # tareaId -> nota (o None)
+    promedio: Optional[float]
+    asistenciaPct: Optional[int]
+    horas: int
+
+
+class LibroCalificacionesOut(BaseModel):
+    aulaId: str
+    aulaNombre: str
+    tareas: list[LibroTareaOut]
+    alumnos: list[LibroAlumnoOut]
+    promedioGeneral: Optional[float]
+
+
+# ── Docencia del profesor: seguimiento individual (HU-28) ─────────────────────
+
+
+class SeguimientoEntregaOut(BaseModel):
+    tareaTitulo: str
+    nota: Optional[int]
+    estado: str
+    retroalimentacion: Optional[str]
+
+
+class SeguimientoOut(BaseModel):
+    practicanteId: str
+    practicanteNombre: str
+    practicanteEmail: str
+    aulaId: str
+    aulaNombre: str
+    empresaNombre: Optional[str]
+    promedio: Optional[float]
+    asistenciaPct: Optional[int]
+    horasAcumuladas: int
+    horasMinimas: int
+    progreso: int
+    estadoPractica: Optional[str]
+    entregas: list[SeguimientoEntregaOut]
+    motivosRiesgo: list[str]

@@ -405,6 +405,102 @@ def _seed_metas_y_seguimiento(db) -> None:
     print("[OK] Metas, asistencia y evaluaciones insertadas.")
 
 
+def _seed_docencia(db) -> None:
+    """
+    Practicantes adicionales del aula a-1 con entregas y asistencia, para que las
+    vistas de docencia del profesor (asistencia, libro de notas, seguimiento —
+    HU-25/26/27/28) tengan datos representativos.
+    """
+    if db.query(User).filter(User.id == "u-alumno2").first():
+        return
+
+    maria = User(
+        id="u-alumno2",
+        nombres="María",
+        apellidos="Quispe Mamani",
+        email="maria.quispe@unsa.edu.pe",
+        hashed_password=hash_password("alumno123"),
+        role=RoleEnum.ALUMNO,
+    )
+    andres = User(
+        id="u-alumno3",
+        nombres="Andrés",
+        apellidos="Coyla Choque",
+        email="andres.coyla@unsa.edu.pe",
+        hashed_password=hash_password("alumno123"),
+        role=RoleEnum.ALUMNO,
+    )
+    db.add_all([maria, andres])
+    db.flush()
+
+    db.add_all(
+        [
+            Inscripcion(alumno_id="u-alumno2", aula_id="a-1", progreso=48, semana_actual=9, semanas_totales=16),
+            Inscripcion(alumno_id="u-alumno3", aula_id="a-1", progreso=82, semana_actual=9, semanas_totales=16),
+        ]
+    )
+
+    db.add_all(
+        [
+            Practica(
+                id="pr-2", practicante_id="u-alumno2", aula_id="a-1", periodo="2026-I",
+                horas_acumuladas=95, horas_minimas=360, estado=PracticaEstadoEnum.EN_CURSO,
+                fecha_inicio=datetime(2026, 4, 1, tzinfo=timezone.utc),
+            ),
+            Practica(
+                id="pr-3", practicante_id="u-alumno3", aula_id="a-1", periodo="2026-I",
+                horas_acumuladas=240, horas_minimas=360, estado=PracticaEstadoEnum.EN_CURSO,
+                fecha_inicio=datetime(2026, 4, 1, tzinfo=timezone.utc),
+            ),
+        ]
+    )
+
+    # Entregas: algunas calificadas, otras pendientes de revisión (HU-26).
+    db.add_all(
+        [
+            # u-alumno: entrega pendiente en t-2 (además de ent-1 ya calificada)
+            Entrega(id="ent-2", tarea_id="t-2", alumno_id="u-alumno",
+                    descripcion="Informe de la semana 9 con evidencias fotográficas.",
+                    comentario="Adjunto cobertura del evento institucional.",
+                    estado=EntregaEstadoEnum.ENTREGADA, nota=None,
+                    created_at=datetime(2026, 5, 16, tzinfo=timezone.utc)),
+            # María: t-1 calificada, t-2 pendiente
+            Entrega(id="ent-3", tarea_id="t-1", alumno_id="u-alumno2",
+                    descripcion="Informe semana 8.", comentario="Trabajé en redacción de notas.",
+                    estado=EntregaEstadoEnum.CALIFICADA, nota=14,
+                    retroalimentacion="Buen avance, cuida la ortografía.",
+                    created_at=datetime(2026, 5, 9, tzinfo=timezone.utc)),
+            Entrega(id="ent-4", tarea_id="t-2", alumno_id="u-alumno2",
+                    descripcion="Informe semana 9.", comentario="",
+                    estado=EntregaEstadoEnum.ENTREGADA, nota=None,
+                    created_at=datetime(2026, 5, 17, tzinfo=timezone.utc)),
+            # Andrés: t-1 y t-2 calificadas
+            Entrega(id="ent-5", tarea_id="t-1", alumno_id="u-alumno3",
+                    descripcion="Informe semana 8.", comentario="Cobertura radial.",
+                    estado=EntregaEstadoEnum.CALIFICADA, nota=18,
+                    retroalimentacion="Excelente trabajo de campo.",
+                    created_at=datetime(2026, 5, 8, tzinfo=timezone.utc)),
+            Entrega(id="ent-6", tarea_id="t-2", alumno_id="u-alumno3",
+                    descripcion="Informe semana 9.", comentario="",
+                    estado=EntregaEstadoEnum.CALIFICADA, nota=16,
+                    retroalimentacion="Muy completo.",
+                    created_at=datetime(2026, 5, 16, tzinfo=timezone.utc)),
+        ]
+    )
+
+    # Asistencia de los 3 practicantes en varias sesiones (HU-25).
+    fechas = [datetime(2026, 5, d, tzinfo=timezone.utc) for d in (4, 11, 18, 25)]
+    presencias = {
+        "u-alumno2": [1, 0, 1, 1],
+        "u-alumno3": [1, 1, 1, 1],
+    }
+    for aid, pres in presencias.items():
+        for f, p in zip(fechas, pres):
+            db.add(RegistroAsistencia(practicante_id=aid, aula_id="a-1", fecha=f, presente=p))
+
+    print("[OK] Docencia (practicantes, entregas y asistencia) insertada.")
+
+
 def seed():
     # Crea tablas si no existen (alternativa a Alembic para desarrollo rápido)
     Base.metadata.create_all(bind=engine)
@@ -415,6 +511,7 @@ def seed():
         _seed_practicas(db)
         _seed_notificaciones(db)
         _seed_metas_y_seguimiento(db)
+        _seed_docencia(db)
         db.commit()
         print("[OK] Semilla verificada correctamente.")
     finally:
