@@ -81,9 +81,23 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
       title: "Principal",
       items: [
         { to: "/dashboard", label: "Inicio", enabled: true },
-        { to: "/aulas", label: "Clases y prácticas", enabled: true },
         { to: "/progreso", label: "Progreso practicantes", enabled: true },
+      ],
+    },
+    {
+      title: "Gestión",
+      items: [
         { to: "/usuarios", label: "Gestión de usuarios", enabled: true },
+        { to: "/gestion-aulas", label: "Aulas virtuales", enabled: true },
+        { to: "/matriculas", label: "Matrículas", enabled: true },
+        { to: "/aulas", label: "Crear clase/práctica", enabled: true },
+      ],
+    },
+    {
+      title: "Análisis",
+      items: [
+        { to: "/reportes", label: "Reportes", enabled: true },
+        { to: "/auditoria", label: "Auditoría", enabled: true },
       ],
     },
     {
@@ -95,6 +109,10 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
         { to: "/metas", label: "Metas por practicante", enabled: true },
         { to: "/reporte", label: "Reporte final", enabled: true },
       ],
+    },
+    {
+      title: "Sistema",
+      items: [{ to: "/roles", label: "Roles y permisos", enabled: true }],
     },
   ],
   SUPERVISOR: [

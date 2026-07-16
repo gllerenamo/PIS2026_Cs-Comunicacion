@@ -16,6 +16,11 @@ import { RevisarPage } from "./pages/profesor/RevisarPage";
 import { LibroPage } from "./pages/profesor/LibroPage";
 import { SeguimientoPage } from "./pages/profesor/SeguimientoPage";
 import { UsuariosPage } from "./pages/admin/UsuariosPage";
+import { AulasAdminPage } from "./pages/admin/AulasAdminPage";
+import { MatriculasPage } from "./pages/admin/MatriculasPage";
+import { ReportesPage } from "./pages/admin/ReportesPage";
+import { AuditoriaPage } from "./pages/admin/AuditoriaPage";
+import { RolesPage } from "./pages/admin/RolesPage";
 import { EmpresaPage } from "./pages/empresa/EmpresaPage";
 import { HorasPage } from "./pages/horas/HorasPage";
 import { CierrePage } from "./pages/cierre/CierrePage";
@@ -100,6 +105,16 @@ export default function App() {
           <Route element={<ProtectedRoute roles={["ADMIN"]} />}>
             <Route element={<AppLayout />}>
               <Route path="/usuarios" element={<UsuariosPage />} />
+              {/* HU-29/30: gestión de aulas y asignación de profesores */}
+              <Route path="/gestion-aulas" element={<AulasAdminPage />} />
+              {/* HU-31: matrículas */}
+              <Route path="/matriculas" element={<MatriculasPage />} />
+              {/* HU-32: reportes institucionales */}
+              <Route path="/reportes" element={<ReportesPage />} />
+              {/* HU-33: auditoría */}
+              <Route path="/auditoria" element={<AuditoriaPage />} />
+              {/* HU-34: roles y permisos */}
+              <Route path="/roles" element={<RolesPage />} />
             </Route>
           </Route>
 

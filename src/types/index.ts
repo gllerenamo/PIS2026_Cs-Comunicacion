@@ -495,3 +495,58 @@ export interface Seguimiento {
   entregas: SeguimientoEntrega[];
   motivosRiesgo: string[];
 }
+
+/* ============================================================
+ * HU-31 · Matrículas (admin)
+ * ============================================================ */
+
+export interface MatriculaAlumno {
+  alumnoId: string;
+  alumnoNombre: string;
+  email: string;
+  inscrito: boolean;
+}
+
+export interface Matriculas {
+  aulaId: string;
+  aulaNombre: string;
+  alumnos: MatriculaAlumno[];
+}
+
+/* ============================================================
+ * HU-32 · Reportes institucionales (admin)
+ * ============================================================ */
+
+export interface ReporteAula {
+  aulaId: string;
+  aulaNombre: string;
+  periodo: string;
+  profesorNombre: string;
+  estado: AulaEstado;
+  inscritos: number;
+  promedioNotas: number | null;
+  asistenciaPct: number | null;
+}
+
+export interface ReporteInstitucional {
+  totalAlumnos: number;
+  totalProfesores: number;
+  totalAulas: number;
+  aulasActivas: number;
+  practicasEnCurso: number;
+  practicasCerradas: number;
+  horasPromedio: number | null;
+  aulas: ReporteAula[];
+}
+
+/* ============================================================
+ * HU-33 · Auditoría (admin)
+ * ============================================================ */
+
+export interface Auditoria {
+  id: string;
+  userNombre: string;
+  accion: string;
+  detalle: string;
+  fecha: string;
+}

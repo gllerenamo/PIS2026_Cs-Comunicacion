@@ -371,6 +371,25 @@ class RegistroAsistencia(Base):
     aula = relationship("Aula")
 
 
+class Auditoria(Base):
+    """Registro de acciones sensibles del administrador (HU-33)."""
+
+    __tablename__ = "auditoria"
+
+    id = Column(String, primary_key=True, default=lambda: f"au-{uuid.uuid4().hex[:10]}")
+    user_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    user_nombre = Column(String(200), nullable=False)
+    accion = Column(String(80), nullable=False)
+    detalle = Column(Text, nullable=False, default="")
+    fecha = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    user = relationship("User")
+
+
 class Evaluacion(Base):
     """Evaluación de desempeño de un practicante por su supervisor externo (HU-24)."""
 

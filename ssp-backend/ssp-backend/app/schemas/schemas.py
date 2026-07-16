@@ -575,3 +575,67 @@ class SeguimientoOut(BaseModel):
     estadoPractica: Optional[str]
     entregas: list[SeguimientoEntregaOut]
     motivosRiesgo: list[str]
+
+
+# ── Gestión administrativa de aulas y matrículas (HU-29/30/31) ────────────────
+
+
+class UpdateAulaEstadoRequest(BaseModel):
+    estado: AulaEstado
+
+
+class AsignarProfesorRequest(BaseModel):
+    profesorId: str
+
+
+class MatriculaAlumnoOut(BaseModel):
+    alumnoId: str
+    alumnoNombre: str
+    email: str
+    inscrito: bool
+
+
+class MatriculasOut(BaseModel):
+    aulaId: str
+    aulaNombre: str
+    alumnos: list[MatriculaAlumnoOut]
+
+
+class MatricularRequest(BaseModel):
+    alumnoId: str
+
+
+# ── Reportes institucionales (HU-32) ──────────────────────────────────────────
+
+
+class ReporteAulaOut(BaseModel):
+    aulaId: str
+    aulaNombre: str
+    periodo: str
+    profesorNombre: str
+    estado: AulaEstado
+    inscritos: int
+    promedioNotas: Optional[float]
+    asistenciaPct: Optional[int]
+
+
+class ReporteInstitucionalOut(BaseModel):
+    totalAlumnos: int
+    totalProfesores: int
+    totalAulas: int
+    aulasActivas: int
+    practicasEnCurso: int
+    practicasCerradas: int
+    horasPromedio: Optional[float]
+    aulas: list[ReporteAulaOut]
+
+
+# ── Auditoría (HU-33) ─────────────────────────────────────────────────────────
+
+
+class AuditoriaOut(BaseModel):
+    id: str
+    userNombre: str
+    accion: str
+    detalle: str
+    fecha: str
