@@ -371,6 +371,88 @@ class RegistroAsistencia(Base):
     aula = relationship("Aula")
 
 
+class Anuncio(Base):
+    """Anuncio publicado por el profesor en un aula (HU-36)."""
+
+    __tablename__ = "anuncios"
+
+    id = Column(String, primary_key=True, default=lambda: f"an-{uuid.uuid4().hex[:10]}")
+    aula_id = Column(String, ForeignKey("aulas.id"), nullable=False, index=True)
+    autor_id = Column(String, ForeignKey("users.id"), nullable=False)
+    autor_nombre = Column(String(200), nullable=False)
+    titulo = Column(String(200), nullable=False)
+    mensaje = Column(Text, nullable=False, default="")
+    fijado = Column(Integer, nullable=False, default=0)  # 0 / 1
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    autor = relationship("User")
+
+
+class ForoHilo(Base):
+    """Hilo de discusión de un aula (HU-37)."""
+
+    __tablename__ = "foro_hilos"
+
+    id = Column(String, primary_key=True, default=lambda: f"fh-{uuid.uuid4().hex[:10]}")
+    aula_id = Column(String, ForeignKey("aulas.id"), nullable=False, index=True)
+    autor_id = Column(String, ForeignKey("users.id"), nullable=False)
+    autor_nombre = Column(String(200), nullable=False)
+    titulo = Column(String(200), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    autor = relationship("User")
+    mensajes = relationship("ForoMensaje", back_populates="hilo")
+
+
+class ForoMensaje(Base):
+    """Respuesta dentro de un hilo del foro (HU-37)."""
+
+    __tablename__ = "foro_mensajes"
+
+    id = Column(String, primary_key=True, default=lambda: f"fm-{uuid.uuid4().hex[:10]}")
+    hilo_id = Column(String, ForeignKey("foro_hilos.id"), nullable=False, index=True)
+    autor_id = Column(String, ForeignKey("users.id"), nullable=False)
+    autor_nombre = Column(String(200), nullable=False)
+    texto = Column(Text, nullable=False, default="")
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    hilo = relationship("ForoHilo", back_populates="mensajes")
+    autor = relationship("User")
+
+
+class MensajeDirecto(Base):
+    """Mensaje directo entre profesor y alumno dentro de un aula (HU-38)."""
+
+    __tablename__ = "mensajes_directos"
+
+    id = Column(String, primary_key=True, default=lambda: f"md-{uuid.uuid4().hex[:10]}")
+    aula_id = Column(String, ForeignKey("aulas.id"), nullable=False, index=True)
+    remitente_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    destinatario_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    texto = Column(Text, nullable=False, default="")
+    leido = Column(Integer, nullable=False, default=0)  # 0 / 1
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    remitente = relationship("User", foreign_keys=[remitente_id])
+    destinatario = relationship("User", foreign_keys=[destinatario_id])
+
+
 class Auditoria(Base):
     """Registro de acciones sensibles del administrador (HU-33)."""
 

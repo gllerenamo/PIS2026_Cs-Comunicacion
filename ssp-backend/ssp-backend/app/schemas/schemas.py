@@ -639,3 +639,79 @@ class AuditoriaOut(BaseModel):
     accion: str
     detalle: str
     fecha: str
+
+
+# ── Comunicación: anuncios (HU-36) ────────────────────────────────────────────
+
+
+class AnuncioOut(BaseModel):
+    id: str
+    aulaId: str
+    autorNombre: str
+    titulo: str
+    mensaje: str
+    fijado: bool
+    fecha: str
+
+
+class CreateAnuncioRequest(BaseModel):
+    titulo: str
+    mensaje: str
+    fijado: bool = False
+
+    @field_validator("titulo", "mensaje", mode="before")
+    @classmethod
+    def strip_strings(cls, v: str) -> str:
+        return v.strip()
+
+
+# ── Comunicación: foros (HU-37) ───────────────────────────────────────────────
+
+
+class ForoHiloOut(BaseModel):
+    id: str
+    aulaId: str
+    autorNombre: str
+    titulo: str
+    respuestas: int
+    fecha: str
+
+
+class CreateHiloRequest(BaseModel):
+    titulo: str
+
+
+class ForoMensajeOut(BaseModel):
+    id: str
+    hiloId: str
+    autorNombre: str
+    texto: str
+    fecha: str
+
+
+class CreateForoMensajeRequest(BaseModel):
+    texto: str
+
+
+# ── Comunicación: mensajería directa (HU-38) ──────────────────────────────────
+
+
+class ContactoOut(BaseModel):
+    userId: str
+    nombre: str
+    aulaId: str
+    aulaNombre: str
+    noLeidos: int
+
+
+class MensajeDirectoOut(BaseModel):
+    id: str
+    remitenteId: str
+    remitenteNombre: str
+    texto: str
+    mio: bool
+    fecha: str
+
+
+class EnviarMensajeRequest(BaseModel):
+    texto: str

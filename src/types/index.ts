@@ -550,3 +550,51 @@ export interface Auditoria {
   detalle: string;
   fecha: string;
 }
+
+/* ============================================================
+ * HU-36 · Anuncios · HU-37 Foros · HU-38 Mensajería (comunicación)
+ * ============================================================ */
+
+export interface Anuncio {
+  id: string;
+  aulaId: string;
+  autorNombre: string;
+  titulo: string;
+  mensaje: string;
+  fijado: boolean;
+  fecha: string;
+}
+
+export interface ForoHilo {
+  id: string;
+  aulaId: string;
+  autorNombre: string;
+  titulo: string;
+  respuestas: number;
+  fecha: string;
+}
+
+export interface ForoMensaje {
+  id: string;
+  hiloId: string;
+  autorNombre: string;
+  texto: string;
+  fecha: string;
+}
+
+export interface Contacto {
+  userId: string;
+  nombre: string;
+  aulaId: string;
+  aulaNombre: string;
+  noLeidos: number;
+}
+
+export interface MensajeDirecto {
+  id: string;
+  remitenteId: string;
+  remitenteNombre: string;
+  texto: string;
+  mio: boolean;
+  fecha: string;
+}

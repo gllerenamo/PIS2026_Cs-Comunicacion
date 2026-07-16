@@ -259,3 +259,191 @@
   grid-template-columns: minmax(200px, 1fr);
   gap: 12px;
 }
+
+/* ── Formularios de comunicación ─────────────────────────────────────── */
+.doc-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 18px;
+}
+.doc-input,
+.doc-textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  margin-bottom: 10px;
+}
+.doc-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+.doc-input:focus,
+.doc-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+.doc-form__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.doc-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+/* ── Anuncios ────────────────────────────────────────────────────────── */
+.doc-anuncio__pin {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+.doc-anuncio__msg {
+  font-size: 13px;
+  color: var(--color-text);
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+/* ── Foro ────────────────────────────────────────────────────────────── */
+.doc-hilo {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.doc-hilo:hover {
+  border-color: var(--color-primary);
+}
+.doc-hilo.is-active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+/* ── Chat / mensajería ───────────────────────────────────────────────── */
+.doc-chat {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 14px;
+  min-height: 380px;
+}
+@media (max-width: 720px) {
+  .doc-chat {
+    grid-template-columns: 1fr;
+  }
+}
+.doc-chat__list {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.doc-chat__contact {
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text);
+}
+.doc-chat__contact:hover {
+  background: var(--color-bg);
+}
+.doc-chat__contact.is-active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.doc-chat__badge {
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 9px;
+}
+.doc-chat__panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.doc-chat__thread {
+  flex: 1;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--color-bg);
+  min-height: 260px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.doc-bubble {
+  max-width: 78%;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.doc-bubble--in {
+  align-self: flex-start;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+.doc-bubble--out {
+  align-self: flex-end;
+  background: var(--color-primary);
+  color: #fff;
+}
+.doc-bubble__time {
+  display: block;
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 3px;
+}
+.doc-chat__compose {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--color-border);
+}
+.doc-chat__compose input {
+  flex: 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+.doc-chat__compose input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}

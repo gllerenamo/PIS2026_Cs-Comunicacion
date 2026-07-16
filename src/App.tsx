@@ -15,6 +15,10 @@ import { AsistenciaPage } from "./pages/profesor/AsistenciaPage";
 import { RevisarPage } from "./pages/profesor/RevisarPage";
 import { LibroPage } from "./pages/profesor/LibroPage";
 import { SeguimientoPage } from "./pages/profesor/SeguimientoPage";
+import { MaterialesAdminPage } from "./pages/profesor/MaterialesAdminPage";
+import { AnunciosPage } from "./pages/profesor/AnunciosPage";
+import { ForosPage } from "./pages/profesor/ForosPage";
+import { MensajeriaPage } from "./pages/profesor/MensajeriaPage";
 import { UsuariosPage } from "./pages/admin/UsuariosPage";
 import { AulasAdminPage } from "./pages/admin/AulasAdminPage";
 import { MatriculasPage } from "./pages/admin/MatriculasPage";
@@ -72,6 +76,14 @@ export default function App() {
               <Route path="/libro" element={<LibroPage />} />
               {/* HU-28: seguimiento individual del practicante */}
               <Route path="/seguimiento" element={<SeguimientoPage />} />
+              {/* HU-35: materiales del aula */}
+              <Route path="/materiales" element={<MaterialesAdminPage />} />
+              {/* HU-36: anuncios del aula */}
+              <Route path="/anuncios" element={<AnunciosPage />} />
+              {/* HU-37: foro de discusión */}
+              <Route path="/foros" element={<ForosPage />} />
+              {/* HU-38: mensajería directa */}
+              <Route path="/mensajeria" element={<MensajeriaPage />} />
             </Route>
           </Route>
 

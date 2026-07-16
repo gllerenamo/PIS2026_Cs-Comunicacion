@@ -10,10 +10,14 @@ from app.db.session import SessionLocal, engine
 from app.models.models import (
     ActividadEstadoEnum,
     ActividadReciente,
+    Anuncio,
     Aula,
     AulaEstadoEnum,
     Base,
     Empresa,
+    ForoHilo,
+    ForoMensaje,
+    MensajeDirecto,
     Entrega,
     EntregaEstadoEnum,
     Evaluacion,
@@ -501,6 +505,73 @@ def _seed_docencia(db) -> None:
     print("[OK] Docencia (practicantes, entregas y asistencia) insertada.")
 
 
+def _seed_comunicacion(db) -> None:
+    """Anuncios, foro y mensajería del aula a-1 (HU-36/37/38)."""
+    if db.query(Anuncio).count() > 0:
+        return
+
+    prof = "Jose Luis Cuenca"
+    db.add_all(
+        [
+            Anuncio(
+                id="an-1", aula_id="a-1", autor_id="u-prof", autor_nombre=prof,
+                titulo="Rúbrica del Informe N.° 9 disponible",
+                mensaje="Ya pueden descargar la rúbrica del informe semanal N.° 9 en Materiales.",
+                fijado=1, created_at=datetime(2026, 5, 20, tzinfo=timezone.utc),
+            ),
+            Anuncio(
+                id="an-2", aula_id="a-1", autor_id="u-prof", autor_nombre=prof,
+                titulo="Cambio de horario de la sesión del miércoles",
+                mensaje="La sesión del miércoles se adelanta a las 4:00 pm por disponibilidad del aula.",
+                fijado=0, created_at=datetime(2026, 5, 26, tzinfo=timezone.utc),
+            ),
+        ]
+    )
+
+    hilo = ForoHilo(
+        id="fh-1", aula_id="a-1", autor_id="u-prof", autor_nombre=prof,
+        titulo="Semana 9 — Debate: ética en el periodismo digital",
+        created_at=datetime(2026, 5, 21, tzinfo=timezone.utc),
+    )
+    db.add(hilo)
+    db.flush()
+    db.add_all(
+        [
+            ForoMensaje(
+                hilo_id="fh-1", autor_id="u-prof", autor_nombre=prof,
+                texto="Abramos el debate: ¿hasta dónde llega la responsabilidad del periodista frente a la desinformación?",
+                created_at=datetime(2026, 5, 21, 10, tzinfo=timezone.utc),
+            ),
+            ForoMensaje(
+                hilo_id="fh-1", autor_id="u-alumno3", autor_nombre="Andrés Coyla Choque",
+                texto="Creo que la verificación de fuentes es el mínimo ético indispensable.",
+                created_at=datetime(2026, 5, 21, 12, tzinfo=timezone.utc),
+            ),
+        ]
+    )
+
+    db.add_all(
+        [
+            MensajeDirecto(
+                aula_id="a-1", remitente_id="u-alumno", destinatario_id="u-prof",
+                texto="Profesor, ¿puedo entregar el informe el sábado? Tengo cobertura el viernes.",
+                leido=1, created_at=datetime(2026, 5, 22, 9, tzinfo=timezone.utc),
+            ),
+            MensajeDirecto(
+                aula_id="a-1", remitente_id="u-prof", destinatario_id="u-alumno",
+                texto="Sí, te apruebo hasta el sábado 10 am. Adjunta la justificación de la cobertura.",
+                leido=1, created_at=datetime(2026, 5, 22, 11, tzinfo=timezone.utc),
+            ),
+            MensajeDirecto(
+                aula_id="a-1", remitente_id="u-alumno2", destinatario_id="u-prof",
+                texto="Buenas, tengo una duda sobre el formato de citas APA.",
+                leido=0, created_at=datetime(2026, 5, 23, 8, tzinfo=timezone.utc),
+            ),
+        ]
+    )
+    print("[OK] Comunicacion (anuncios, foro y mensajes) insertada.")
+
+
 def seed():
     # Crea tablas si no existen (alternativa a Alembic para desarrollo rápido)
     Base.metadata.create_all(bind=engine)
@@ -512,6 +583,7 @@ def seed():
         _seed_notificaciones(db)
         _seed_metas_y_seguimiento(db)
         _seed_docencia(db)
+        _seed_comunicacion(db)
         db.commit()
         print("[OK] Semilla verificada correctamente.")
     finally:

@@ -40,6 +40,15 @@ export const archivoService = {
     return res.json() as Promise<Archivo>;
   },
 
+  /** DELETE /api/v1/aulas/{id}/archivos/{archivoId} — elimina un material (profesor). */
+  async remove(aulaId: string, archivoId: string): Promise<void> {
+    const res = await fetch(`${BASE_URL}/api/v1/aulas/${aulaId}/archivos/${archivoId}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    });
+    if (!res.ok && res.status !== 204) throw new Error("No se pudo eliminar el material.");
+  },
+
   /** GET .../descargar — descarga el archivo y dispara el guardado en el navegador. */
   async download(aulaId: string, archivoId: string, nombreOriginal: string): Promise<void> {
     const res = await fetch(

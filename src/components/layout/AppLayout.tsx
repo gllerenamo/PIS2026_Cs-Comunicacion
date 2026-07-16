@@ -60,9 +60,18 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
     {
       title: "Docencia",
       items: [
+        { to: "/materiales", label: "Materiales", enabled: true },
         { to: "/asistencia", label: "Asistencia", enabled: true },
         { to: "/revisar", label: "Revisar entregas", enabled: true },
         { to: "/libro", label: "Calificaciones", enabled: true },
+      ],
+    },
+    {
+      title: "Comunicación",
+      items: [
+        { to: "/anuncios", label: "Anuncios", enabled: true },
+        { to: "/foros", label: "Foros", enabled: true },
+        { to: "/mensajeria", label: "Mensajería", enabled: true },
       ],
     },
     {
