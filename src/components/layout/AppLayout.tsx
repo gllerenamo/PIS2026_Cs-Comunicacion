@@ -140,8 +140,12 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
       ],
     },
     {
+      title: "Vínculo académico",
+      items: [{ to: "/documentos", label: "Convenio y documentos", enabled: true }],
+    },
+    {
       title: "Cuenta",
-      items: [{ to: "/perfil", label: "Datos del centro" }],
+      items: [{ to: "/datos-centro", label: "Datos del centro", enabled: true }],
     },
   ],
 };

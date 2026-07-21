@@ -652,3 +652,46 @@ export interface CompletarEvaluacionPayload {
   trabajoEquipo: number;
   comentario: string;
 }
+
+/** Documento del vínculo académico con el centro (HU-42). */
+export interface DocumentoCentro {
+  id: string;
+  categoria: string;
+  nombreOriginal: string;
+  tipoMime: string;
+  tamanio: number;
+  subidoPorNombre: string;
+  fecha: string;
+}
+
+/** Datos del centro de prácticas y de su supervisor (HU-43). */
+export interface Centro {
+  ruc: string;
+  razonSocial: string;
+  direccion: string;
+  sector: string;
+  telefono: string;
+  email: string;
+  practicantes: number;
+  supervisorNombres: string;
+  supervisorApellidos: string;
+  supervisorCargo: string;
+  supervisorEmail: string;
+  supervisorTelefono: string;
+}
+
+export interface UpdateCentroPayload {
+  razonSocial: string;
+  direccion: string;
+  sector: string;
+  telefono: string;
+  email: string;
+}
+
+export interface UpdateContactoPayload {
+  nombres: string;
+  apellidos: string;
+  cargo: string;
+  email: string;
+  telefono: string;
+}

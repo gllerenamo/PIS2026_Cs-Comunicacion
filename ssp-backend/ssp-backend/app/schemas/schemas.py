@@ -769,6 +769,61 @@ class EvaluacionDetalleOut(BaseModel):
     puntaje: Optional[int] = None
 
 
+class DocumentoCentroOut(BaseModel):
+    """Documento del vínculo académico con el centro (HU-42)."""
+
+    id: str
+    categoria: str
+    nombreOriginal: str
+    tipoMime: str
+    tamanio: int
+    subidoPorNombre: str
+    fecha: str
+
+
+class CentroOut(BaseModel):
+    """Datos del centro de prácticas y de su supervisor (HU-43)."""
+
+    ruc: str
+    razonSocial: str
+    direccion: str
+    sector: str
+    telefono: str
+    email: str
+    practicantes: int
+    supervisorNombres: str
+    supervisorApellidos: str
+    supervisorCargo: str
+    supervisorEmail: str
+    supervisorTelefono: str
+
+
+class UpdateCentroRequest(BaseModel):
+    razonSocial: str
+    direccion: str
+    sector: str
+    telefono: str
+    email: EmailStr
+
+    @field_validator("razonSocial", "direccion", "sector", "telefono", mode="before")
+    @classmethod
+    def strip_strings(cls, v: str) -> str:
+        return v.strip()
+
+
+class UpdateContactoSupervisorRequest(BaseModel):
+    nombres: str
+    apellidos: str
+    cargo: str
+    email: EmailStr
+    telefono: str
+
+    @field_validator("nombres", "apellidos", "cargo", "telefono", mode="before")
+    @classmethod
+    def strip_strings(cls, v: str) -> str:
+        return v.strip()
+
+
 class CompletarEvaluacionRequest(BaseModel):
     puntualidad: int
     responsabilidad: int

@@ -22,6 +22,8 @@ import { MensajeriaPage } from "./pages/profesor/MensajeriaPage";
 import { MisPracticantesPage } from "./pages/supervisor/MisPracticantesPage";
 import { ValidarHorasPage } from "./pages/supervisor/ValidarHorasPage";
 import { EvaluacionesPage } from "./pages/supervisor/EvaluacionesPage";
+import { DocumentosPage } from "./pages/supervisor/DocumentosPage";
+import { DatosCentroPage } from "./pages/supervisor/DatosCentroPage";
 import { UsuariosPage } from "./pages/admin/UsuariosPage";
 import { AulasAdminPage } from "./pages/admin/AulasAdminPage";
 import { MatriculasPage } from "./pages/admin/MatriculasPage";
@@ -115,6 +117,10 @@ export default function App() {
               <Route path="/mis-practicantes" element={<MisPracticantesPage />} />
               <Route path="/validar-horas" element={<ValidarHorasPage />} />
               <Route path="/evaluaciones" element={<EvaluacionesPage />} />
+              {/* HU-42: convenio y documentos del centro */}
+              <Route path="/documentos" element={<DocumentosPage />} />
+              {/* HU-43: datos del centro y contacto del supervisor */}
+              <Route path="/datos-centro" element={<DatosCentroPage />} />
             </Route>
           </Route>
 

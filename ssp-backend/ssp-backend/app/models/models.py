@@ -371,6 +371,35 @@ class RegistroAsistencia(Base):
     aula = relationship("Aula")
 
 
+class DocumentoCentro(Base):
+    """
+    Documento del vínculo académico con el centro de prácticas: convenio, carta
+    de presentación, etc. (HU-42).
+
+    Se identifica por el RUC del centro y no por una empresa concreta, porque
+    cada practicante registra su propia fila de `empresas` para el mismo centro.
+    """
+
+    __tablename__ = "documentos_centro"
+
+    id = Column(String, primary_key=True, default=lambda: f"dc-{uuid.uuid4().hex[:10]}")
+    ruc = Column(String(20), nullable=False, index=True)
+    categoria = Column(String(60), nullable=False, default="Convenio")
+    nombre_original = Column(String(255), nullable=False)
+    nombre_guardado = Column(String(255), unique=True, nullable=False)
+    tipo_mime = Column(String(100), nullable=False)
+    tamanio = Column(Integer, nullable=False)  # bytes
+    subido_por_id = Column(String, ForeignKey("users.id"), nullable=False)
+    subido_por_nombre = Column(String(200), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    subido_por = relationship("User")
+
+
 class Anuncio(Base):
     """Anuncio publicado por el profesor en un aula (HU-36)."""
 

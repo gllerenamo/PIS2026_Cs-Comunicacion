@@ -4,15 +4,20 @@ Solo el propio practicante gestiona sus datos.
 Rutas: /api/v1/empresa/*
 """
 
+import uuid
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.deps import get_current_user
 from app.db.session import get_db
 from app.models.models import (
+    DocumentoCentro,
     Empresa,
     Evaluacion,
     EvaluacionEstadoEnum,
@@ -24,17 +29,24 @@ from app.models.models import (
     User,
 )
 from app.schemas.schemas import (
+    CentroOut,
     CompletarEvaluacionRequest,
     CreateEmpresaRequest,
     CreateSupervisorRequest,
+    DocumentoCentroOut,
     EmpresaOut,
     EvaluacionDetalleOut,
     PracticanteCentroOut,
     RegistroValidacionOut,
     ResumenEmpresaOut,
     SupervisorOut,
+    UpdateCentroRequest,
+    UpdateContactoSupervisorRequest,
     ValidarHorasRequest,
 )
+
+MAX_FILE_SIZE = 20 * 1024 * 1024  # 20 MB
+UPLOAD_BASE = Path(settings.UPLOAD_DIR).resolve()
 
 router = APIRouter(prefix="/empresa", tags=["empresa"])
 
@@ -491,3 +503,217 @@ def completar_evaluacion(
     return _eval_out(
         evaluacion, f"{practica.practicante.nombres} {practica.practicante.apellidos}"
     )
+
+
+# ── Helpers del centro ────────────────────────────────────────────────────────
+
+
+def _centro_del_supervisor(db: Session, user: User) -> tuple[Supervisor, list[Empresa]]:
+    """Devuelve el registro de supervisor y todas las filas de empresa de su centro."""
+    supervisor = db.query(Supervisor).filter(Supervisor.user_id == user.id).first()
+    if supervisor is None:
+        raise HTTPException(
+            status_code=404, detail="Tu cuenta no está vinculada a un centro de prácticas."
+        )
+    empresa_base = db.query(Empresa).filter(Empresa.id == supervisor.empresa_id).first()
+    if empresa_base is None:
+        raise HTTPException(status_code=404, detail="Centro de prácticas no encontrado.")
+    empresas = db.query(Empresa).filter(Empresa.ruc == empresa_base.ruc).all()
+    return supervisor, empresas
+
+
+# ── HU-43 · Datos del centro ──────────────────────────────────────────────────
+
+
+@router.get("/centro", response_model=CentroOut)
+def get_centro(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Datos del centro de prácticas y del supervisor que lo representa."""
+    _solo_supervisor(current_user)
+    supervisor, empresas = _centro_del_supervisor(db, current_user)
+    base = empresas[0]
+    return CentroOut(
+        ruc=base.ruc,
+        razonSocial=base.razon_social,
+        direccion=base.direccion,
+        sector=base.sector,
+        telefono=base.telefono,
+        email=base.email,
+        practicantes=len(empresas),
+        supervisorNombres=supervisor.nombres,
+        supervisorApellidos=supervisor.apellidos,
+        supervisorCargo=supervisor.cargo,
+        supervisorEmail=supervisor.email,
+        supervisorTelefono=supervisor.telefono,
+    )
+
+
+@router.put("/centro", response_model=CentroOut)
+def update_centro(
+    payload: UpdateCentroRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Actualiza los datos del centro. El cambio se aplica a las fichas de todos los
+    practicantes del mismo RUC, para que la información quede consistente.
+    El RUC no se modifica: identifica al centro.
+    """
+    _solo_supervisor(current_user)
+    _, empresas = _centro_del_supervisor(db, current_user)
+    for e in empresas:
+        e.razon_social = payload.razonSocial
+        e.direccion = payload.direccion
+        e.sector = payload.sector
+        e.telefono = payload.telefono
+        e.email = payload.email
+    db.commit()
+    return get_centro(db, current_user)
+
+
+@router.put("/centro/contacto", response_model=CentroOut)
+def update_contacto_supervisor(
+    payload: UpdateContactoSupervisorRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Actualiza los datos de contacto del supervisor del centro."""
+    _solo_supervisor(current_user)
+    supervisor, _ = _centro_del_supervisor(db, current_user)
+    supervisor.nombres = payload.nombres
+    supervisor.apellidos = payload.apellidos
+    supervisor.cargo = payload.cargo
+    supervisor.email = payload.email
+    supervisor.telefono = payload.telefono
+    db.commit()
+    return get_centro(db, current_user)
+
+
+# ── HU-42 · Convenio y documentos ─────────────────────────────────────────────
+
+
+def _doc_out(d: DocumentoCentro) -> DocumentoCentroOut:
+    return DocumentoCentroOut(
+        id=d.id,
+        categoria=d.categoria,
+        nombreOriginal=d.nombre_original,
+        tipoMime=d.tipo_mime,
+        tamanio=d.tamanio,
+        subidoPorNombre=d.subido_por_nombre,
+        fecha=d.created_at.isoformat() if d.created_at else "",
+    )
+
+
+@router.get("/documentos", response_model=list[DocumentoCentroOut])
+def list_documentos(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Documentos del vínculo académico con el centro (convenio, cartas, etc.)."""
+    _solo_supervisor(current_user)
+    _, empresas = _centro_del_supervisor(db, current_user)
+    documentos = (
+        db.query(DocumentoCentro)
+        .filter(DocumentoCentro.ruc == empresas[0].ruc)
+        .order_by(DocumentoCentro.created_at.desc())
+        .all()
+    )
+    return [_doc_out(d) for d in documentos]
+
+
+@router.post(
+    "/documentos", response_model=DocumentoCentroOut, status_code=status.HTTP_201_CREATED
+)
+def subir_documento(
+    categoria: str = Form("Convenio"),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Sube un documento del centro (máx. 20 MB)."""
+    _solo_supervisor(current_user)
+    _, empresas = _centro_del_supervisor(db, current_user)
+    ruc = empresas[0].ruc
+
+    contenido = file.file.read()
+    if len(contenido) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="El archivo supera el límite de 20 MB.",
+        )
+
+    ext = Path(file.filename or "documento").suffix
+    nombre_guardado = f"{uuid.uuid4().hex}{ext}"
+    ruta_dir = UPLOAD_BASE / "centros" / ruc
+    ruta_dir.mkdir(parents=True, exist_ok=True)
+    (ruta_dir / nombre_guardado).write_bytes(contenido)
+
+    doc = DocumentoCentro(
+        ruc=ruc,
+        categoria=categoria.strip() or "Convenio",
+        nombre_original=file.filename or nombre_guardado,
+        nombre_guardado=nombre_guardado,
+        tipo_mime=file.content_type or "application/octet-stream",
+        tamanio=len(contenido),
+        subido_por_id=current_user.id,
+        subido_por_nombre=f"{current_user.nombres} {current_user.apellidos}",
+        created_at=datetime.now(timezone.utc),
+    )
+    db.add(doc)
+    db.commit()
+    db.refresh(doc)
+    return _doc_out(doc)
+
+
+@router.get("/documentos/{documento_id}/descargar")
+def descargar_documento(
+    documento_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Descarga un documento del centro."""
+    _solo_supervisor(current_user)
+    _, empresas = _centro_del_supervisor(db, current_user)
+
+    doc = (
+        db.query(DocumentoCentro)
+        .filter(DocumentoCentro.id == documento_id, DocumentoCentro.ruc == empresas[0].ruc)
+        .first()
+    )
+    if doc is None:
+        raise HTTPException(status_code=404, detail="Documento no encontrado.")
+
+    ruta = UPLOAD_BASE / "centros" / doc.ruc / doc.nombre_guardado
+    if not ruta.exists():
+        raise HTTPException(status_code=404, detail="El archivo no existe en el servidor.")
+
+    return FileResponse(
+        path=str(ruta), filename=doc.nombre_original, media_type=doc.tipo_mime
+    )
+
+
+@router.delete("/documentos/{documento_id}", status_code=204)
+def eliminar_documento(
+    documento_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Elimina un documento del centro."""
+    _solo_supervisor(current_user)
+    _, empresas = _centro_del_supervisor(db, current_user)
+
+    doc = (
+        db.query(DocumentoCentro)
+        .filter(DocumentoCentro.id == documento_id, DocumentoCentro.ruc == empresas[0].ruc)
+        .first()
+    )
+    if doc is None:
+        raise HTTPException(status_code=404, detail="Documento no encontrado.")
+
+    ruta = UPLOAD_BASE / "centros" / doc.ruc / doc.nombre_guardado
+    if ruta.exists():
+        ruta.unlink()
+    db.delete(doc)
+    db.commit()
