@@ -715,3 +715,70 @@ class MensajeDirectoOut(BaseModel):
 
 class EnviarMensajeRequest(BaseModel):
     texto: str
+
+
+# ── Supervisor de empresa: practicantes del centro (HU-39) ────────────────────
+
+
+class PracticanteCentroOut(BaseModel):
+    practicanteId: str
+    practicanteNombre: str
+    email: str
+    practicaId: str
+    aulaNombre: str
+    periodo: str
+    horasAcumuladas: int
+    horasMinimas: int
+    estado: PracticaEstado
+    horasPendientes: int
+    evaluacionPendiente: bool
+
+
+# ── Supervisor de empresa: validación de horas (HU-40) ────────────────────────
+
+
+class RegistroValidacionOut(BaseModel):
+    id: str
+    practicaId: str
+    practicanteNombre: str
+    fecha: str
+    horas: int
+    descripcion: str
+    estadoValidacion: RegistroHorasEstado
+
+
+class ValidarHorasRequest(BaseModel):
+    estado: RegistroHorasEstado
+
+
+# ── Supervisor de empresa: evaluación de desempeño (HU-41) ────────────────────
+
+
+class EvaluacionDetalleOut(BaseModel):
+    id: str
+    practicaId: str
+    practicanteNombre: str
+    periodo: str
+    estado: EvaluacionEstado
+    fechaLimite: Optional[str] = None
+    puntualidad: Optional[int] = None
+    responsabilidad: Optional[int] = None
+    calidad: Optional[int] = None
+    trabajoEquipo: Optional[int] = None
+    comentario: str = ""
+    puntaje: Optional[int] = None
+
+
+class CompletarEvaluacionRequest(BaseModel):
+    puntualidad: int
+    responsabilidad: int
+    calidad: int
+    trabajoEquipo: int
+    comentario: str = ""
+
+    @field_validator("puntualidad", "responsabilidad", "calidad", "trabajoEquipo")
+    @classmethod
+    def rango_0_20(cls, v: int) -> int:
+        if v < 0 or v > 20:
+            raise ValueError("Cada criterio debe estar entre 0 y 20.")
+        return v

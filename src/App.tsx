@@ -19,6 +19,9 @@ import { MaterialesAdminPage } from "./pages/profesor/MaterialesAdminPage";
 import { AnunciosPage } from "./pages/profesor/AnunciosPage";
 import { ForosPage } from "./pages/profesor/ForosPage";
 import { MensajeriaPage } from "./pages/profesor/MensajeriaPage";
+import { MisPracticantesPage } from "./pages/supervisor/MisPracticantesPage";
+import { ValidarHorasPage } from "./pages/supervisor/ValidarHorasPage";
+import { EvaluacionesPage } from "./pages/supervisor/EvaluacionesPage";
 import { UsuariosPage } from "./pages/admin/UsuariosPage";
 import { AulasAdminPage } from "./pages/admin/AulasAdminPage";
 import { MatriculasPage } from "./pages/admin/MatriculasPage";
@@ -103,6 +106,15 @@ export default function App() {
               <Route path="/mis-aulas" element={<MisAulasPage />} />
               <Route path="/mis-aulas/:id" element={<AulaVirtualPage />} />
               <Route path="/bitacora" element={<BitacoraPage />} />
+            </Route>
+          </Route>
+
+          {/* Supervisor del centro de prácticas (HU-39/40/41) */}
+          <Route element={<ProtectedRoute roles={["SUPERVISOR"]} />}>
+            <Route element={<AppLayout />}>
+              <Route path="/mis-practicantes" element={<MisPracticantesPage />} />
+              <Route path="/validar-horas" element={<ValidarHorasPage />} />
+              <Route path="/evaluaciones" element={<EvaluacionesPage />} />
             </Route>
           </Route>
 

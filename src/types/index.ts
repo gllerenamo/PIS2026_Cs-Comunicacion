@@ -598,3 +598,57 @@ export interface MensajeDirecto {
   mio: boolean;
   fecha: string;
 }
+
+/* ============================================================
+ * HU-39/40/41 · Supervisor del centro de prácticas
+ * ============================================================ */
+
+/** Practicante asignado al centro de prácticas del supervisor (HU-39). */
+export interface PracticanteCentro {
+  practicanteId: string;
+  practicanteNombre: string;
+  email: string;
+  practicaId: string;
+  aulaNombre: string;
+  periodo: string;
+  horasAcumuladas: number;
+  horasMinimas: number;
+  estado: PracticaEstado;
+  horasPendientes: number;
+  evaluacionPendiente: boolean;
+}
+
+/** Registro de bitácora pendiente de validación por el supervisor (HU-40). */
+export interface RegistroValidacion {
+  id: string;
+  practicaId: string;
+  practicanteNombre: string;
+  fecha: string;
+  horas: number;
+  descripcion: string;
+  estadoValidacion: RegistroHorasEstado;
+}
+
+/** Evaluación de desempeño con su rúbrica (HU-41). */
+export interface EvaluacionDetalle {
+  id: string;
+  practicaId: string;
+  practicanteNombre: string;
+  periodo: string;
+  estado: EvaluacionEstado;
+  fechaLimite: string | null;
+  puntualidad: number | null;
+  responsabilidad: number | null;
+  calidad: number | null;
+  trabajoEquipo: number | null;
+  comentario: string;
+  puntaje: number | null;
+}
+
+export interface CompletarEvaluacionPayload {
+  puntualidad: number;
+  responsabilidad: number;
+  calidad: number;
+  trabajoEquipo: number;
+  comentario: string;
+}

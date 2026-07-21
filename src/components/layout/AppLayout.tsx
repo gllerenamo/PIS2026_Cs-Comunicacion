@@ -127,7 +127,21 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
   SUPERVISOR: [
     {
       title: "Principal",
-      items: [{ to: "/dashboard", label: "Inicio", enabled: true }],
+      items: [
+        { to: "/dashboard", label: "Inicio", enabled: true },
+        { to: "/mis-practicantes", label: "Mis practicantes", enabled: true },
+      ],
+    },
+    {
+      title: "Supervisión",
+      items: [
+        { to: "/validar-horas", label: "Validar horas", enabled: true },
+        { to: "/evaluaciones", label: "Evaluaciones", enabled: true },
+      ],
+    },
+    {
+      title: "Cuenta",
+      items: [{ to: "/perfil", label: "Datos del centro" }],
     },
   ],
 };

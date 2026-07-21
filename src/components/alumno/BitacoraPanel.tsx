@@ -8,6 +8,13 @@ interface Props {
   aulaId: string;
 }
 
+/** Etiqueta del estado de validación que asigna el supervisor del centro (HU-40). */
+const VALIDACION_TXT: Record<string, string> = {
+  PENDIENTE: "Por validar",
+  VALIDADO: "Validado",
+  RECHAZADO: "Rechazado",
+};
+
 /** Caja de fecha (día grande + mes) al estilo del mockup. */
 function fechaCaja(iso: string): { dia: string; mes: string } {
   if (!iso) return { dia: "—", mes: "" };
@@ -186,6 +193,11 @@ export function BitacoraPanel({ aulaId }: Props) {
                     <span className="bita-item__act">{r.descripcion}</span>
                     <span className="bita-item__sub">{r.horas} horas</span>
                   </div>
+                  <span
+                    className={`bita-item__estado bita-item__estado--${r.estadoValidacion.toLowerCase()}`}
+                  >
+                    {VALIDACION_TXT[r.estadoValidacion]}
+                  </span>
                   <span className="bita-item__hours">{r.horas} h</span>
                 </div>
               );

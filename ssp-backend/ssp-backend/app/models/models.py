@@ -486,5 +486,14 @@ class Evaluacion(Base):
     )
     fecha_limite = Column(DateTime(timezone=True), nullable=True)
 
+    # Rúbrica de desempeño (0–20 por criterio), completada por el supervisor (HU-41).
+    puntualidad = Column(Integer, nullable=True)
+    responsabilidad = Column(Integer, nullable=True)
+    calidad = Column(Integer, nullable=True)
+    trabajo_equipo = Column(Integer, nullable=True)
+    comentario = Column(Text, nullable=False, default="")
+    puntaje = Column(Integer, nullable=True)  # promedio de los criterios
+    fecha_completada = Column(DateTime(timezone=True), nullable=True)
+
     practica = relationship("Practica")
     empresa = relationship("Empresa")

@@ -572,6 +572,89 @@ def _seed_comunicacion(db) -> None:
     print("[OK] Comunicacion (anuncios, foro y mensajes) insertada.")
 
 
+def _seed_centro_supervisor(db) -> None:
+    """
+    Vincula a los demás practicantes con el mismo centro de prácticas (mismo RUC),
+    con horas pendientes de validar y evaluaciones, para las vistas del
+    supervisor externo (HU-39/40/41).
+    """
+    if db.query(Empresa).count() > 1:
+        return
+
+    db.add_all(
+        [
+            Empresa(
+                id="e-2", practicante_id="u-alumno2",
+                razon_social="Radio Yaraví S.A.C.", ruc="20123456789",
+                direccion="Av. Ejército 710, Yanahuara, Arequipa",
+                sector="Medios de comunicación", telefono="054-254321",
+                email="contacto@radioyaravi.pe",
+                created_at=datetime(2026, 4, 8, tzinfo=timezone.utc),
+            ),
+            Empresa(
+                id="e-3", practicante_id="u-alumno3",
+                razon_social="Radio Yaraví S.A.C.", ruc="20123456789",
+                direccion="Av. Ejército 710, Yanahuara, Arequipa",
+                sector="Medios de comunicación", telefono="054-254321",
+                email="contacto@radioyaravi.pe",
+                created_at=datetime(2026, 4, 8, tzinfo=timezone.utc),
+            ),
+        ]
+    )
+    db.flush()
+
+    # Las prácticas de esos alumnos pasan a depender del mismo centro.
+    for pid, eid in (("pr-2", "e-2"), ("pr-3", "e-3")):
+        practica = db.query(Practica).filter(Practica.id == pid).first()
+        if practica:
+            practica.empresa_id = eid
+
+    db.add_all(
+        [
+            RegistroHoras(
+                id="h-4", practica_id="pr-2",
+                fecha=datetime(2026, 6, 10, tzinfo=timezone.utc), horas=45,
+                descripcion="Redacción de notas para el boletín informativo.",
+                estado_validacion=RegistroHorasEstadoEnum.VALIDADO,
+            ),
+            RegistroHoras(
+                id="h-5", practica_id="pr-2",
+                fecha=datetime(2026, 6, 28, tzinfo=timezone.utc), horas=50,
+                descripcion="Apoyo en la locución del programa matutino.",
+                estado_validacion=RegistroHorasEstadoEnum.PENDIENTE,
+            ),
+            RegistroHoras(
+                id="h-6", practica_id="pr-3",
+                fecha=datetime(2026, 6, 15, tzinfo=timezone.utc), horas=120,
+                descripcion="Producción y edición de reportajes de campo.",
+                estado_validacion=RegistroHorasEstadoEnum.VALIDADO,
+            ),
+            RegistroHoras(
+                id="h-7", practica_id="pr-3",
+                fecha=datetime(2026, 7, 2, tzinfo=timezone.utc), horas=120,
+                descripcion="Cobertura de la agenda municipal.",
+                estado_validacion=RegistroHorasEstadoEnum.PENDIENTE,
+            ),
+        ]
+    )
+
+    db.add_all(
+        [
+            Evaluacion(
+                id="ev-2", practica_id="pr-2", empresa_id="e-2", periodo="2026-I",
+                estado=EvaluacionEstadoEnum.PENDIENTE,
+                fecha_limite=datetime(2026, 7, 25, tzinfo=timezone.utc),
+            ),
+            Evaluacion(
+                id="ev-3", practica_id="pr-3", empresa_id="e-3", periodo="2026-I",
+                estado=EvaluacionEstadoEnum.PENDIENTE,
+                fecha_limite=datetime(2026, 7, 25, tzinfo=timezone.utc),
+            ),
+        ]
+    )
+    print("[OK] Centro de practicas del supervisor insertado.")
+
+
 def seed():
     # Crea tablas si no existen (alternativa a Alembic para desarrollo rápido)
     Base.metadata.create_all(bind=engine)
@@ -584,6 +667,7 @@ def seed():
         _seed_metas_y_seguimiento(db)
         _seed_docencia(db)
         _seed_comunicacion(db)
+        _seed_centro_supervisor(db)
         db.commit()
         print("[OK] Semilla verificada correctamente.")
     finally:

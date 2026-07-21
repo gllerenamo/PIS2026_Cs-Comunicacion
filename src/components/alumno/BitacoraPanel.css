@@ -183,6 +183,18 @@
   color: var(--color-primary);
 }
 
+/* Estado de validación asignado por el supervisor del centro (HU-40). */
+.bita-item__estado {
+  flex-shrink: 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 10px;
+}
+.bita-item__estado--validado { background: #eaf3de; color: #27500a; }
+.bita-item__estado--pendiente { background: #faeeda; color: #633806; }
+.bita-item__estado--rechazado { background: #fcebeb; color: #791f1f; }
+
 /* Total acumulado */
 .bita__total {
   display: flex;
