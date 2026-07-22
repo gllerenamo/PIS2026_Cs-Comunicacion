@@ -207,6 +207,51 @@ class CalificacionesOut(BaseModel):
     detalle: list[DetalleCalificacionOut]
 
 
+class CalificacionesAulaOut(BaseModel):
+    """Calificaciones del alumno en un aula concreta (HU-45)."""
+
+    aulaId: str
+    aulaNombre: str
+    periodo: str
+    promedio: Optional[float]
+    tareasTotal: int
+    tareasEntregadas: int
+    detalle: list[DetalleCalificacionOut]
+
+
+class ResumenCalificacionesOut(BaseModel):
+    """Consulta general de calificaciones del alumno en todas sus aulas (HU-45)."""
+
+    promedioGeneral: Optional[float]
+    aulas: list[CalificacionesAulaOut]
+
+
+# ── Perfil personal (HU-46) ───────────────────────────────────────────────────
+
+
+class UpdatePerfilRequest(BaseModel):
+    nombres: str
+    apellidos: str
+    email: EmailStr
+
+    @field_validator("nombres", "apellidos", mode="before")
+    @classmethod
+    def strip_strings(cls, v: str) -> str:
+        return v.strip()
+
+
+class CambiarPasswordRequest(BaseModel):
+    passwordActual: str
+    passwordNueva: str
+
+    @field_validator("passwordNueva")
+    @classmethod
+    def longitud_minima(cls, v: str) -> str:
+        if len(v) < 6:
+            raise ValueError("La nueva contraseña debe tener al menos 6 caracteres.")
+        return v
+
+
 # ── Archivos (HU-07/08) ──────────────────────────────────────────────────────
 
 

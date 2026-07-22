@@ -8,6 +8,8 @@ export interface AuthContextValue {
   login: (email: string, password: string) => Promise<LoginResponse>;
   register: (payload: RegisterPayload) => Promise<User>;
   logout: () => void;
+  /** Refresca el usuario en sesión tras editar el perfil (HU-46). */
+  updateUser: (user: User) => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(

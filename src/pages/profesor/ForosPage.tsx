@@ -4,9 +4,17 @@ import { comunicacionService } from "../../services/comunicacionService";
 import type { ForoHilo, ForoMensaje } from "../../types";
 import "./docencia.css";
 
-/** HU-37 · Foro de discusión del aula (profesor): hilos y respuestas. */
-export function ForosPage() {
-  const [aulaId, setAulaId] = useState("");
+interface Props {
+  /** Si se indica, el foro trabaja sobre esa aula y se oculta el selector. */
+  aulaId?: string;
+  /** Modo incrustado (pestaña del aula): sin cabecera ni migas. */
+  embedded?: boolean;
+}
+
+/** HU-37 · Foro de discusión del aula: hilos y respuestas (profesor y alumno). */
+export function ForosPage({ aulaId: aulaFija, embedded = false }: Props = {}) {
+  const [aulaSel, setAulaSel] = useState("");
+  const aulaId = aulaFija ?? aulaSel;
   const [hilos, setHilos] = useState<ForoHilo[]>([]);
   const [nuevoHilo, setNuevoHilo] = useState("");
   const [abierto, setAbierto] = useState<ForoHilo | null>(null);
@@ -61,16 +69,20 @@ export function ForosPage() {
 
   return (
     <div className="doc">
-      <p className="doc__breadcrumb">Inicio › Comunicación › Foros</p>
-      <header className="doc__head">
-        <div>
-          <h1 className="doc__title">Foro de discusión</h1>
-          <p className="doc__subtitle">{hilos.length} hilo(s) activo(s)</p>
-        </div>
-      </header>
+      {!embedded && (
+        <>
+          <p className="doc__breadcrumb">Inicio › Comunicación › Foros</p>
+          <header className="doc__head">
+            <div>
+              <h1 className="doc__title">Foro de discusión</h1>
+              <p className="doc__subtitle">{hilos.length} hilo(s) activo(s)</p>
+            </div>
+          </header>
+        </>
+      )}
 
       <div className="doc__toolbar">
-        <AulaSelect value={aulaId} onChange={(id) => setAulaId(id)} />
+        {!aulaFija && <AulaSelect value={aulaId} onChange={setAulaSel} />}
         <input
           className="doc-input"
           style={{ margin: 0, maxWidth: 320 }}

@@ -1,4 +1,10 @@
-import type { LoginResponse, RegisterPayload, User } from "../types";
+import type {
+  CambiarPasswordPayload,
+  LoginResponse,
+  RegisterPayload,
+  UpdatePerfilPayload,
+  User,
+} from "../types";
 import { http } from "./apiClient";
 
 /**
@@ -37,6 +43,25 @@ export const authService = {
       method: "POST",
       auth: false,
       body: { email },
+    });
+  },
+
+  /** PUT /api/v1/auth/perfil — actualiza los datos personales (HU-46). */
+  async updatePerfil(payload: UpdatePerfilPayload): Promise<User> {
+    const user = await http<User>("/api/v1/auth/perfil", {
+      method: "PUT",
+      body: payload,
+    });
+    // La sesión guardada debe reflejar el nombre y correo nuevos.
+    localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    return user;
+  },
+
+  /** PUT /api/v1/auth/password — cambia la contraseña (HU-46). */
+  async cambiarPassword(payload: CambiarPasswordPayload): Promise<{ message: string }> {
+    return http<{ message: string }>("/api/v1/auth/password", {
+      method: "PUT",
+      body: payload,
     });
   },
 

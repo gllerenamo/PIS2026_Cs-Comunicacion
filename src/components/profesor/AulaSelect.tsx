@@ -1,52 +1,68 @@
 import { useEffect, useState } from "react";
 import { aulaService } from "../../services/aulaService";
+import { alumnoService } from "../../services/alumnoService";
 import { useAuth } from "../../hooks/useAuth";
-import type { Aula } from "../../types";
+
+interface Opcion {
+  id: string;
+  etiqueta: string;
+}
 
 interface Props {
   value: string;
-  onChange: (aulaId: string, aula: Aula | null) => void;
-  /** Si true, incluye también aulas concluidas (por defecto solo activas primero). */
+  onChange: (aulaId: string) => void;
 }
 
 /**
- * Selector de las aulas que dicta el profesor (o todas, si es admin).
- * Auto-selecciona la primera aula al cargar para que las vistas de docencia
- * (asistencia, libro, seguimiento) muestren datos sin un paso extra.
+ * Selector del aula sobre la que trabajan las vistas de docencia y comunicación.
+ * Según el rol usa una fuente distinta: el profesor/admin ve las aulas que
+ * gestiona y el alumno solo aquellas en las que está matriculado.
+ * Auto-selecciona la primera para que la vista muestre datos sin un paso extra.
  */
 export function AulaSelect({ value, onChange }: Props) {
   const { user } = useAuth();
-  const [aulas, setAulas] = useState<Aula[]>([]);
+  const [opciones, setOpciones] = useState<Opcion[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
-    aulaService
-      .list(user)
+
+    const cargar =
+      user.role === "ALUMNO"
+        ? alumnoService
+            .listMisAulas(user)
+            .then((as) =>
+              as.map((a) => ({ id: a.id, etiqueta: `${a.nombre} · ${a.ciclo}` })),
+            )
+        : aulaService
+            .list(user)
+            .then((as) =>
+              as.map((a) => ({ id: a.id, etiqueta: `${a.nombre} · ${a.periodo}` })),
+            );
+
+    cargar
       .then((lista) => {
-        setAulas(lista);
-        if (lista.length > 0 && !value) onChange(lista[0].id, lista[0]);
+        setOpciones(lista);
+        if (lista.length > 0 && !value) onChange(lista[0].id);
       })
-      .catch(() => setAulas([]))
+      .catch(() => setOpciones([]))
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   if (loading) return <span className="doc-muted">Cargando aulas…</span>;
-  if (aulas.length === 0) return <span className="doc-muted">No tienes aulas asignadas.</span>;
+  if (opciones.length === 0)
+    return <span className="doc-muted">No tienes aulas disponibles.</span>;
 
   return (
     <select
       className="doc-select"
       value={value}
-      onChange={(e) => {
-        const aula = aulas.find((a) => a.id === e.target.value) ?? null;
-        onChange(e.target.value, aula);
-      }}
+      onChange={(e) => onChange(e.target.value)}
     >
-      {aulas.map((a) => (
-        <option key={a.id} value={a.id}>
-          {a.nombre} · {a.periodo}
+      {opciones.map((o) => (
+        <option key={o.id} value={o.id}>
+          {o.etiqueta}
         </option>
       ))}
     </select>

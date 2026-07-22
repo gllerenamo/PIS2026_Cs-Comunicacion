@@ -1,4 +1,9 @@
-import type { ActividadReciente, AulaAlumno, User } from "../types";
+import type {
+  ActividadReciente,
+  AulaAlumno,
+  ResumenCalificaciones,
+  User,
+} from "../types";
 import { http } from "./apiClient";
 
 /**
@@ -22,5 +27,10 @@ export const alumnoService = {
   async getAulaDetalle(aulaId: string, user: User): Promise<AulaAlumno> {
     void user;
     return http<AulaAlumno>(`/api/v1/alumno/aulas/${aulaId}`);
+  },
+
+  /** GET /api/v1/alumno/calificaciones — consulta general de notas (HU-45). */
+  async getCalificaciones(): Promise<ResumenCalificaciones> {
+    return http<ResumenCalificaciones>("/api/v1/alumno/calificaciones");
   },
 };

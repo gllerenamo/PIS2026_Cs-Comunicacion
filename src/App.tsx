@@ -10,6 +10,8 @@ import { AulasPage } from "./pages/aulas/AulasPage";
 import { MisAulasPage } from "./pages/alumno/MisAulasPage";
 import { AulaVirtualPage } from "./pages/alumno/AulaVirtualPage";
 import { BitacoraPage } from "./pages/alumno/BitacoraPage";
+import { CalificacionesPage } from "./pages/alumno/CalificacionesPage";
+import { PerfilPage } from "./pages/PerfilPage";
 import { ProgresoPage } from "./pages/profesor/ProgresoPage";
 import { AsistenciaPage } from "./pages/profesor/AsistenciaPage";
 import { RevisarPage } from "./pages/profesor/RevisarPage";
@@ -52,6 +54,8 @@ export default function App() {
             <Route element={<AppLayout />}>
               {/* HU-22/23/24: el panel se adapta al rol (profesor/admin/supervisor/alumno) */}
               <Route path="/dashboard" element={<DashboardPage />} />
+              {/* HU-46: perfil personal, disponible para todos los roles */}
+              <Route path="/perfil" element={<PerfilPage />} />
             </Route>
           </Route>
 
@@ -62,6 +66,10 @@ export default function App() {
               <Route path="/reporte" element={<ReportePage />} />
               {/* HU-20: metas por practicante */}
               <Route path="/metas" element={<MetasPage />} />
+              {/* HU-37 / HU-44: foro y mensajería del aula, para docente y estudiante.
+                  El acceso a cada aula lo valida el backend según la matrícula. */}
+              <Route path="/foros" element={<ForosPage />} />
+              <Route path="/mensajeria" element={<MensajeriaPage />} />
             </Route>
           </Route>
 
@@ -85,10 +93,6 @@ export default function App() {
               <Route path="/materiales" element={<MaterialesAdminPage />} />
               {/* HU-36: anuncios del aula */}
               <Route path="/anuncios" element={<AnunciosPage />} />
-              {/* HU-37: foro de discusión */}
-              <Route path="/foros" element={<ForosPage />} />
-              {/* HU-38: mensajería directa */}
-              <Route path="/mensajeria" element={<MensajeriaPage />} />
             </Route>
           </Route>
 
@@ -108,6 +112,8 @@ export default function App() {
               <Route path="/mis-aulas" element={<MisAulasPage />} />
               <Route path="/mis-aulas/:id" element={<AulaVirtualPage />} />
               <Route path="/bitacora" element={<BitacoraPage />} />
+              {/* HU-45: consulta general de calificaciones */}
+              <Route path="/calificaciones" element={<CalificacionesPage />} />
             </Route>
           </Route>
 

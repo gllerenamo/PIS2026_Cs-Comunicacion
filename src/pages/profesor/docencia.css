@@ -234,6 +234,7 @@
   padding: 14px;
 }
 .doc-kpi__lbl {
+  display: block; /* también se usa como <label> de formulario */
   font-size: 10px;
   letter-spacing: 0.8px;
   text-transform: uppercase;

@@ -158,6 +158,31 @@ export interface Calificaciones {
   detalle: DetalleCalificacion[];
 }
 
+/** Calificaciones del alumno en un aula, dentro de la consulta general (HU-45). */
+export interface CalificacionesAula extends Calificaciones {
+  aulaId: string;
+  aulaNombre: string;
+  periodo: string;
+}
+
+/** Consulta general de calificaciones en todas las aulas del alumno (HU-45). */
+export interface ResumenCalificaciones {
+  promedioGeneral: number | null;
+  aulas: CalificacionesAula[];
+}
+
+/** Payloads del perfil personal (HU-46). */
+export interface UpdatePerfilPayload {
+  nombres: string;
+  apellidos: string;
+  email: string;
+}
+
+export interface CambiarPasswordPayload {
+  passwordActual: string;
+  passwordNueva: string;
+}
+
 /** Archivo subido a un aula (HU-07/08). */
 export interface Archivo {
   id: string;

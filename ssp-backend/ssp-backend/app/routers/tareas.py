@@ -20,9 +20,11 @@ from app.models.models import (
     User,
 )
 from app.schemas.schemas import (
+    CalificacionesAulaOut,
     CalificacionesOut,
     DetalleCalificacionOut,
     EntregaOut,
+    ResumenCalificacionesOut,
     SubmitEntregaRequest,
     TareaAlumnoOut,
 )
@@ -214,3 +216,85 @@ def get_calificaciones(
         tareasEntregadas=len(entregas_por_tarea),
         detalle=detalle,
     )
+
+
+# ── HU-45 · GET /api/v1/alumno/calificaciones (consulta general) ─────────────
+
+
+@router.get("/alumno/calificaciones", response_model=ResumenCalificacionesOut)
+def get_calificaciones_generales(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Calificaciones del alumno en todas sus aulas, con el promedio general."""
+    _solo_alumno(current_user)
+
+    inscripciones = (
+        db.query(Inscripcion).filter(Inscripcion.alumno_id == current_user.id).all()
+    )
+
+    aulas_out: list[CalificacionesAulaOut] = []
+    promedios: list[float] = []
+
+    for ins in inscripciones:
+        aula = ins.aula
+        if aula is None:
+            continue
+
+        tareas = db.query(Tarea).filter(Tarea.aula_id == aula.id).all()
+        entregas_por_tarea: dict[str, Entrega] = {}
+        if tareas:
+            for e in (
+                db.query(Entrega)
+                .filter(
+                    Entrega.alumno_id == current_user.id,
+                    Entrega.tarea_id.in_([t.id for t in tareas]),
+                )
+                .all()
+            ):
+                entregas_por_tarea[e.tarea_id] = e
+
+        notas = [e.nota for e in entregas_por_tarea.values() if e.nota is not None]
+        promedio = round(sum(notas) / len(notas), 2) if notas else None
+        if promedio is not None:
+            promedios.append(promedio)
+
+        detalle = [
+            DetalleCalificacionOut(
+                tareaId=t.id,
+                tareaTitulo=t.titulo,
+                nota=entregas_por_tarea[t.id].nota if t.id in entregas_por_tarea else None,
+                retroalimentacion=(
+                    entregas_por_tarea[t.id].retroalimentacion
+                    if t.id in entregas_por_tarea
+                    else None
+                ),
+                estado=(
+                    entregas_por_tarea[t.id].estado.value
+                    if t.id in entregas_por_tarea
+                    else "PENDIENTE"
+                ),
+                entregadaEn=(
+                    entregas_por_tarea[t.id].created_at.isoformat()
+                    if t.id in entregas_por_tarea and entregas_por_tarea[t.id].created_at
+                    else None
+                ),
+            )
+            for t in tareas
+        ]
+
+        aulas_out.append(
+            CalificacionesAulaOut(
+                aulaId=aula.id,
+                aulaNombre=aula.nombre,
+                periodo=aula.periodo,
+                promedio=promedio,
+                tareasTotal=len(tareas),
+                tareasEntregadas=len(entregas_por_tarea),
+                detalle=detalle,
+            )
+        )
+
+    aulas_out.sort(key=lambda a: a.aulaNombre)
+    promedio_general = round(sum(promedios) / len(promedios), 2) if promedios else None
+    return ResumenCalificacionesOut(promedioGeneral=promedio_general, aulas=aulas_out)

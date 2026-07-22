@@ -5,6 +5,8 @@ import { MaterialesPanel } from "../../components/alumno/MaterialesPanel";
 import { TareasPanel } from "../../components/alumno/TareasPanel";
 import { NotasPanel } from "../../components/alumno/NotasPanel";
 import { BitacoraPanel } from "../../components/alumno/BitacoraPanel";
+import { ForosPage } from "../profesor/ForosPage";
+import { MensajeriaPage } from "../profesor/MensajeriaPage";
 import { alumnoService } from "../../services/alumnoService";
 import { useAuth } from "../../hooks/useAuth";
 import type { AulaAlumno } from "../../types";
@@ -96,6 +98,10 @@ export function AulaVirtualPage() {
           <NotasPanel aulaId={aula.id} />
         ) : activeTab === "Bitácora" ? (
           <BitacoraPanel aulaId={aula.id} />
+        ) : activeTab === "Foro" ? (
+          <ForosPage aulaId={aula.id} embedded />
+        ) : activeTab === "Mensajes" ? (
+          <MensajeriaPage aulaId={aula.id} embedded />
         ) : (
           <p className="aula-v__placeholder">{TAB_PLACEHOLDER[activeTab]}</p>
         )}

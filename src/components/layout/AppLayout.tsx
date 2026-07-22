@@ -33,19 +33,19 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
         { to: "/metas", label: "Metas por practicante", enabled: true },
         { to: "/reporte", label: "Reporte final", enabled: true },
         { to: "/bitacora", label: "Mi bitácora", enabled: true },
-        { to: "/calificaciones", label: "Calificaciones" },
+        { to: "/calificaciones", label: "Calificaciones", enabled: true },
       ],
     },
     {
       title: "Comunicación",
       items: [
-        { to: "/mensajeria", label: "Mensajería" },
-        { to: "/foros", label: "Foros" },
+        { to: "/mensajeria", label: "Mensajería", enabled: true },
+        { to: "/foros", label: "Foros", enabled: true },
       ],
     },
     {
       title: "Cuenta",
-      items: [{ to: "/perfil", label: "Mi perfil" }],
+      items: [{ to: "/perfil", label: "Mi perfil", enabled: true }],
     },
   ],
   PROFESOR: [
@@ -84,6 +84,10 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
         { to: "/reporte", label: "Reporte final", enabled: true },
       ],
     },
+    {
+      title: "Cuenta",
+      items: [{ to: "/perfil", label: "Mi perfil", enabled: true }],
+    },
   ],
   ADMIN: [
     {
@@ -121,7 +125,10 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
     },
     {
       title: "Sistema",
-      items: [{ to: "/roles", label: "Roles y permisos", enabled: true }],
+      items: [
+        { to: "/roles", label: "Roles y permisos", enabled: true },
+        { to: "/perfil", label: "Mi perfil", enabled: true },
+      ],
     },
   ],
   SUPERVISOR: [
@@ -145,7 +152,10 @@ const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
     },
     {
       title: "Cuenta",
-      items: [{ to: "/datos-centro", label: "Datos del centro", enabled: true }],
+      items: [
+        { to: "/datos-centro", label: "Datos del centro", enabled: true },
+        { to: "/perfil", label: "Mi perfil", enabled: true },
+      ],
     },
   ],
 };

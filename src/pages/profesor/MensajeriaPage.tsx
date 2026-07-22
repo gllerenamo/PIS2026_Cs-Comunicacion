@@ -9,9 +9,17 @@ function hora(iso: string): string {
   return new Date(iso).toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" });
 }
 
+interface Props {
+  /** Si se indica, la mensajería trabaja sobre esa aula y se oculta el selector. */
+  aulaId?: string;
+  /** Modo incrustado (pestaña del aula): sin cabecera ni migas. */
+  embedded?: boolean;
+}
+
 /** HU-38 · Mensajería directa profesor ↔ alumno del aula. */
-export function MensajeriaPage() {
-  const [aulaId, setAulaId] = useState("");
+export function MensajeriaPage({ aulaId: aulaFija, embedded = false }: Props = {}) {
+  const [aulaSel, setAulaSel] = useState("");
+  const aulaId = aulaFija ?? aulaSel;
   const [contactos, setContactos] = useState<Contacto[]>([]);
   const [activo, setActivo] = useState<Contacto | null>(null);
   const [mensajes, setMensajes] = useState<MensajeDirecto[]>([]);
@@ -58,17 +66,23 @@ export function MensajeriaPage() {
 
   return (
     <div className="doc">
-      <p className="doc__breadcrumb">Inicio › Comunicación › Mensajería</p>
-      <header className="doc__head">
-        <div>
-          <h1 className="doc__title">Mensajería</h1>
-          <p className="doc__subtitle">Conversaciones directas con tus practicantes</p>
-        </div>
-      </header>
+      {!embedded && (
+        <>
+          <p className="doc__breadcrumb">Inicio › Comunicación › Mensajería</p>
+          <header className="doc__head">
+            <div>
+              <h1 className="doc__title">Mensajería</h1>
+              <p className="doc__subtitle">Conversaciones directas dentro del aula</p>
+            </div>
+          </header>
+        </>
+      )}
 
-      <div className="doc__toolbar">
-        <AulaSelect value={aulaId} onChange={(id) => setAulaId(id)} />
-      </div>
+      {!aulaFija && (
+        <div className="doc__toolbar">
+          <AulaSelect value={aulaId} onChange={setAulaSel} />
+        </div>
+      )}
 
       {error && <p className="doc-error">{error}</p>}
 
